@@ -1,0 +1,7 @@
+[01-Dec-2014 14:50:06 UTC] PHP Notice:  Use of undefined constant undefined - assumed 'undefined' in G:\Webdocs\Tracker\WebApp\DataStores\BeanDataStore.php on line 118
+[01-Dec-2014 14:50:42 UTC] PHP Notice:  Use of undefined constant undefined - assumed 'undefined' in G:\Webdocs\Tracker\WebApp\DataStores\BeanDataStore.php on line 118
+[01-Dec-2014 14:51:38 UTC] PHP Notice:  Use of undefined constant undefined - assumed 'undefined' in G:\Webdocs\Tracker\WebApp\DataStores\BeanDataStore.php on line 118
+[01-Dec-2014 14:51:59 UTC] PHP Notice:  Use of undefined constant undefined - assumed 'undefined' in G:\Webdocs\Tracker\WebApp\DataStores\BeanDataStore.php on line 118
+[01-Dec-2014 14:53:11 UTC] PHP Notice:  Undefined variable: ADMIN_SEQ in G:\Webdocs\Tracker\WebApp\Utils\SessionUtil.php on line 32
+[02-Dec-2014 13:41:53 UTC] PHP Notice:  Undefined property: AdminMgr::$className in G:\Webdocs\Tracker\WebApp\DataStores\BeanDataStore.php on line 18
+[02-Dec-2014 13:43:12 UTC] PHP Notice:  Undefined property: AdminMgr::$className in G:\Webdocs\Tracker\WebApp\DataStores\BeanDataStore.php on line 18
