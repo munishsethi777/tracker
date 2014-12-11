@@ -2,7 +2,7 @@
 class User{
 
 	public static $tableName = "users";
-	private $seq,$mobile,$password,$email,$createdon,$isenabled,$isactivated;
+	private $seq,$mobile,$password,$email,$fullname,$createdon,$isenabled,$isactivated;
 
 	public function setSeq($seq_){
 		$this->seq = $seq_;
@@ -32,6 +32,13 @@ class User{
 		return $this->email;
 	}
 
+    public function setFullName($fullName_){
+        $this->fullname = $fullName_;
+    }
+    public function getFullName(){
+        return $this->fullname;
+    }
+
     public function setCreatedOn($dateOfJoining_){
 		$this->createdon = $dateOfJoining_;
 	}
@@ -50,7 +57,7 @@ class User{
     public function getIsActivated(){
         return $this->isactivated;
     }
-    
+
 
 }
 
