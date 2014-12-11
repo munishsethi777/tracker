@@ -28,8 +28,8 @@
     if($seq != null){
         $circle = new Circle();
         $circle = createDefaultCircle($user);
-        $response["circleseq"]= $circle->getSeq();
-        $response["circlename"]= $circle->getName();
+        $response["groupseq"]= $circle->getSeq();
+        $response["groupname"]= $circle->getName();
     }
   }catch(Exception $e){
     if($e->getCode() == 23000){
