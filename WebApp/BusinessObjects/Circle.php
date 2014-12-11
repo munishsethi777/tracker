@@ -1,21 +1,22 @@
 <?php
   class Circle{
+      public static $tableName = "circles";
       private $seq,$name,$adminuserseq,$createdon,$isenabled;
-      
+
       public function setSeq($seq_){
           $this->seq = $seq_;
-      }  
+      }
       public function getSeq(){
         return $this->seq;
       }
-      
+
       public function setName($name){
           $this->name = $name;
       }
       public function getName(){
-          $this->name;
+          return $this->name;
       }
-      
+
       public function setAdminUserSeq($userSeq){
           $this->adminuserseq = $userSeq;
       }
@@ -28,7 +29,7 @@
       public function getCreatedOn(){
             return $this->createdon;
       }
-      
+
       public function setIsEnabled($isEnabled_){
         $this->isenabled = $isEnabled_;
       }

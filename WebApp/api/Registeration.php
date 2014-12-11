@@ -1,7 +1,9 @@
 <?php
   require_once('../IConstants.inc');
   require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/User.php");
+  require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/Circle.php");
   require_once($ConstantsArray['dbServerUrl']. "DataStores/UserDataStore.php");
+
   $response = new ArrayObject();
   $response["success"] = 1;
   $response["message"]  = "";
@@ -22,8 +24,12 @@
     $userDataStore = UserDataStore::getInstance();
     $seq = $userDataStore->save($user);
     $response["seq"] = $seq;
+    $user->setSeq($seq);
     if($seq != null){
-
+        $circle = new Circle();
+        $circle = createDefaultCircle($user);
+        $response["circleseq"]= $circle->getSeq();
+        $response["circlename"]= $circle->getName();
     }
   }catch(Exception $e){
     if($e->getCode() == 23000){
@@ -40,14 +46,26 @@
        $arr = explode('key', $e->getMessage());
        $key = $arr["1"];
        if(trim($key) ==  "'mobile_2'"){
-           return "Mobile no is already exist";
+           return "Mobile Number already exists";
        }else if(trim($key) == "'email_1'"){
-           return "Email is alreadty exist";
+           return "Email alreadty exists";
        }
       return "";
    }
 
 
-   function
+   function createDefaultCircle(User $user){
+        $userFullNameArr = explode(" ",$user->getFullName());
+        $circleName = $userFullNameArr[0];
+        $circleDS = new BeanDataStore("Circle",Circle::$tableName);
+        $circle = new Circle();
+        $circle->setAdminUserSeq($user->getSeq());
+        $circle->setCreatedOn(new DateTime());
+        $circle->setIsEnabled(true);
+        $circle->setName($circleName."'s Group");
+        $seq = $circleDS->save($circle);
+        $circle->setSeq($seq);
+        return $circle;
+   }
 
 ?>
