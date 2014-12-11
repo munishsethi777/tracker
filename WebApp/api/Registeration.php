@@ -12,7 +12,7 @@
     $mobile = $_GET["mobile"];
     $email = $_GET["email"];
     $password = $_GET["password"];
-    $fullName = $_GET["fullName"];
+    $fullName = $_GET["fullname"];
     $user = new User();
     $user->setCreatedOn(new DateTime());
     $user->setEmail($email);
