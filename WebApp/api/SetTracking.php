@@ -1,10 +1,10 @@
 <?php
-    require_once('IConstants.inc');
+    require_once('../IConstants.inc');
     require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/Location.php");
     require_once($ConstantsArray['dbServerUrl']. "DataStores/BeanDataStore.php");
-   $response = new ArrayObject();
-   $response["success"] = 1;
-   $response["message"]  = "";
+    $response = new ArrayObject();
+    $response["success"] = 1;
+    $response["message"]  = "";
     try{
         $data = $_GET['data'];
         //$data = '{"useq":1,"locations":[{"long":1212.12222221,"lat":121.343222243,"dated":"2014-12-02 12:15:19"},{"long":134324.1232323,"lat":34.2342224234,"dated":"2014-12-03 12:15:19"}]}';   
@@ -22,11 +22,19 @@
         }
         $locationDataStore = new BeanDataStore("Location",Location::$tableName);
         $locationDataStore->saveList($locationArray);
+        $response["success"] = 1;
     }   
     }catch(Exception $e){
        $response["success"] = 0;
        $response["message"]  = "Exception saving tracking : - " . $e->getMessage(); 
     }
-    
+    header('Access-Control-Allow-Origin: *');
+    header("Access-Control-Allow-Credentials: true");
+    header('Access-Control-Allow-Methods: GET, PUT, POST, DELETE, OPTIONS');
+    header('Access-Control-Max-Age: 1000');
+    header('Access-Control-Allow-Headers: Content-Type, Content-Range, Content-Disposition, Content-Description');
+    header("Content-type: application/json");
+    echo json_encode($response);
+    retrun;
     
 ?>
