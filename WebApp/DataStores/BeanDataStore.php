@@ -205,7 +205,8 @@
       $objList = $sth->fetchAll(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, $this->className);
       return $objList;
     }
-
+    
+    //For associatve array
     public function executeQuery($query){
         $db = MainDB::getInstance();
         $conn = $db->getConnection();
@@ -215,8 +216,21 @@
          if($error[2] <> ""){
           throw new Exception($error[2]);
          }
-         //$objList = $sth->fetchAll(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, $this->className);
          $objList = $sth->fetchAll();
+         return $objList;
+    }
+    
+    //For Object of array
+    public function executeObjectQuery($query){
+        $db = MainDB::getInstance();
+        $conn = $db->getConnection();
+        $sth = $conn->prepare($query);
+        $sth->execute();
+        $error = $sth->errorInfo();
+         if($error[2] <> ""){
+          throw new Exception($error[2]);
+         }
+         $objList = $sth->fetchAll(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, $this->className);
          return $objList;
     }
 
