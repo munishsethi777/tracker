@@ -1,6 +1,6 @@
 <?php
-  class Circle{
-      public static $tableName = "circles";
+  class Group{
+      public static $tableName = "groups";
       private $seq,$name,$adminuserseq,$createdon,$isenabled;
 
       public function setSeq($seq_){

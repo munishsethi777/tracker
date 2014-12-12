@@ -1,5 +1,7 @@
 <?php
   class Request{
+      public static $tableName = "requests";
+      public static $className = "Request";
       private $seq,$byuser,$touser,$circleseq,$requestdate,$status,$responsedate;
       
       public function setSeq($seq_){
@@ -10,7 +12,7 @@
       }
       
       public function setByuser($byuser_){
-          $this->c = $byuser_;
+          $this->byuser = $byuser_;
       }
       public function getByuser(){
           return $this->byuser;
