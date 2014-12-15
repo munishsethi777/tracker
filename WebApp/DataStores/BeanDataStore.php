@@ -233,7 +233,22 @@
          $objList = $sth->fetchAll(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, $this->className);
          return $objList;
     }
-
+    //For Object of array
+    public function executeParameterizedQuery($query,$params){
+       $db = MainDB::getInstance();
+       $conn = $db->getConnection();
+       $sth = $conn->prepare($query);
+       foreach($params as $key => $item){
+          $sth->bindParam($key, $item);
+        }
+        $sth->execute();
+        $error = $sth->errorInfo();
+         if($error[2] <> ""){
+          throw new Exception($error[2]);
+         }
+         $objList = $sth->fetchAll();
+         return $objList;
+    }
     public function executeAttributeQuery($attributes,$colValuePair){
        foreach ($colValuePair as $key => $value)
        {

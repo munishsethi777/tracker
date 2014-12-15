@@ -1,6 +1,7 @@
 <?php
   class Group{
       public static $tableName = "groups";
+      public static $className = "Group"; 
       private $seq,$name,$adminuserseq,$createdon,$isenabled;
 
       public function setSeq($seq_){

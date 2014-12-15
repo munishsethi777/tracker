@@ -28,7 +28,10 @@
         $colValuePair = array();
         $colValuePair["mobile"] = $mobile;
         $userList = self::executeConditionQuery($colValuePair);
-        return $userList;
+         if(sizeof($userList) > 0){
+            return $userList[0];
+        }
+        return null;
     }
     
     public function getExistingMobile($mobileNumbers){
