@@ -2,7 +2,7 @@
 class User{
 
 	public static $tableName = "users";
-	private $seq,$adminseq,$mobile,$password,$email,$fullname,$issubmitter,$createdon,$isenabled;
+	private $seq,$mobile,$password,$email,$createdon,$isenabled,$isactivated;
 
 	public function setSeq($seq_){
 		$this->seq = $seq_;
@@ -10,13 +10,6 @@ class User{
 	public function getSeq(){
 		return $this->seq;
 	}
-
-    public function setAdminSeq($adminseq_){
-        $this->adminseq = $adminseq_;
-    }
-    public function getAdminSeq(){
-        return $this->adminseq;
-    }
 
 	public function setMobile($mobile_){
 		$this->mobile = $mobile_;
@@ -39,21 +32,7 @@ class User{
 		return $this->email;
 	}
 
-    public function setFullName($fullName_){
-        $this->fullname = $fullName_;
-    }
-    public function getFullName(){
-        return $this->fullname;
-    }
-
-	public function setIsSubmitter($bool_){
-		$this->issubmitter = $bool_;
-	}
-	public function getIsSubmitter(){
-		return $this->issubmitter;
-	}
-
-	public function setCreatedOn($dateOfJoining_){
+    public function setCreatedOn($dateOfJoining_){
 		$this->createdon = $dateOfJoining_;
 	}
 	public function getCreatedOn(){
@@ -65,7 +44,13 @@ class User{
 	public function getIsEnabled(){
 		return $this->isenabled;
 	}
-
+    public function setIsActivated($isActivated_){
+        $this->isactivated = $isActivated_;
+    }
+    public function getIsActivated(){
+        return $this->isactivated;
+    }
+    
 
 }
 

@@ -30,9 +30,18 @@
         $userList = self::executeConditionQuery($colValuePair);
         return $userList;
     }
+    
+    public function getExistingMobile($mobileNumbers){
+        $params = '"'. implode('","', explode(',', $mobileNumbers)) .'"';
+        $query = "select mobile from users where mobile in(" .$params .")";
+        $mobiles = "";
+        $existingArray = self::executeQuery($query);
+        if(!empty($existingArray)){
+           $mobiles = implode(", " , $existingArray[0]);  
+        }           
+        return $mobiles;
+    }
 
-	public function setSubmitter($submitterUser,$usersSeqsList){
-		self::executeQuery();
-	}
+	
  }
 ?>
