@@ -39,10 +39,14 @@
         $query = "select mobile from users where mobile in(" .$params .")";
         $mobiles = "";
         $existingArray = self::executeQuery($query);
-        if(!empty($existingArray)){
-           $mobiles = implode(", " , $existingArray[0]);  
-        }           
-        return $mobiles;
+        $mobiles = array();
+        if(!empty($existingArray)){                     
+           foreach($existingArray as $arr){
+               array_push($mobiles,$arr[0]); 
+           }
+           $mobiles = implode(",",$mobiles);  
+        } 
+        return  $mobiles;
     }
 
 	
