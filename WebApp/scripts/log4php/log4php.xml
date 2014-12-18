@@ -1,0 +1,11 @@
+<configuration xmlns="http://logging.apache.org/log4php/">
+    <appender name="default" class="LoggerAppenderPDO">
+        <param name="dsn" value="mysql:host=localhost;dbname=tracker" />
+        <param name="user" value="root" />
+        <param name="password" value="password" />
+        <param name="table" value="log4php_log" />
+    </appender>
+    <root>
+        <appender_ref ref="default" />
+    </root>
+</configuration>
