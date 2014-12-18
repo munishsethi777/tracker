@@ -50,14 +50,6 @@ public class InviteActivity extends BaseActivity {
         setContentView(R.layout.contacts_list_view);
 
         Bundle bundle = this.getIntent().getBundleExtra("BUNDLE");
-//        if (bundle == null) {
-//            bundle = this.getIntent().getBundleExtra("bundle");
-//        }
-//        if (savedInstanceState != null) {
-//            userSeq = savedInstanceState.getString("userSeq");
-//            fullName = savedInstanceState.getString("fullName");
-//        } else
-
         groupSeq = bundle.getLong("GROUP_SEQ");
 //        mFormView = findViewById(R.id.invitation_form);
 //        mProgressView = findViewById(R.id.invitation_progress);
@@ -98,7 +90,7 @@ public class InviteActivity extends BaseActivity {
         if (inviteFriendsTask != null) {
             return;
         }
-        // ListView listView = getListView();
+
         String numbers = "";
         int len = listView.getCount();
         SparseBooleanArray checked = listView.getCheckedItemPositions();
@@ -112,7 +104,7 @@ public class InviteActivity extends BaseActivity {
                     numbers = numbers + "," + item.getNumber();
                 }
 
-                  /* do whatever you want with the checked item */
+
             }
         Toast.makeText(this, "Sending invitation to - " + numbers, Toast.LENGTH_SHORT).show();
         User user = ApiDependency.getOwner(this, false);
@@ -122,19 +114,13 @@ public class InviteActivity extends BaseActivity {
     }
 
     public void onListItemClick(ListView parent, View v, int position, long id) {
-        //---toggle the check displayed next to the item---
 
     }
 
 
-    /**
-     * Shows the progress UI and hides the login form.
-     */
 //    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
 //    public void showProgress(final boolean show) {
-//        // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
-//        // for very easy animations. If available, use these APIs to fade-in
-//        // the progress spinner.
+
 //        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
 //            int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
 //
@@ -156,8 +142,7 @@ public class InviteActivity extends BaseActivity {
 //                }
 //            });
 //        } else {
-//            // The ViewPropertyAnimator APIs are not available, so simply show
-//            // and hide the relevant UI components.
+
 //            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
 //            mFormView.setVisibility(show ? View.GONE : View.VISIBLE);
 //        }
@@ -186,13 +171,12 @@ public class InviteActivity extends BaseActivity {
                         Toast.LENGTH_LONG).show();
             }
             try {
-                // Simulate network access.
                 Thread.sleep(2000);
             } catch (InterruptedException e) {
                 Log.e(TAG, "Error while sending invitation", e);
                 return errMessage;
             }
-            // Object[] args = {mMobileNo, mEmail, mPassword, mFullName};
+
             String url = IConstants.GROUP_REQUEST_URL;
             url = MessageFormat.format(url, userSeq, numbers, groupSeq);
 
@@ -213,26 +197,6 @@ public class InviteActivity extends BaseActivity {
                     isSuccess = json.getInt("success");
                     message = json.getString("message");
                     if (isSuccess == 1) {
-//                        //  userSeq = String.valueOf(json.get("seq"));
-//                        user.setUserSeq(json.getLong("seq"));
-//                        isExists = json.getInt("isexists");
-//                        if (isExists == 1) {
-//                            user.setFullName(json.getString("fullname"));
-//                            // mFullName = json.getString("fullname");
-//                            Bundle bundle = new Bundle();
-//
-//                            bundle.putLong("userSeq", user.getUserSeq());
-//                            bundle.putString("fullName", user.getFullName());
-//                            bundle.putBoolean("EXIST", true);
-//                            Intent i = new Intent();
-//
-//                            i.putExtras(bundle);
-//                            setResult(RESULT_OK, i);
-//                            return "";
-//                        } else if (isExists == 0) {
-//                            groupSeq = json.getLong("groupseq");
-//                            groupName = json.getString("groupname");
-//                        }
                     }
                     errMessage = message;
                 }
@@ -245,29 +209,8 @@ public class InviteActivity extends BaseActivity {
                 if (isSuccess == 0) {
                     return errMessage;
                 } else if (isSuccess == 1) {
-//                    user.setOwner(true);
-//                    user.save(getApplicationContext());
-//                    Group ug = new Group();
-//                    ug.setGroupSeq(groupSeq);
-//                    ug.setGroupName(groupName);
-//                    ug.setGroupAdmin(user.getUserSeq());
-//                    ug.setDefault(true);
-//                    ug.save(getApplicationContext());
-//                    UserGroup.save(getApplicationContext(), ug.getGroupSeq(), user.getUserSeq());
-//                MySQLiteHelper db = new MySQLiteHelper(getApplicationContext());
-//                db.SaveConfig(IConstants.USER_MOBILE, user.getMobileNo());
-//                db.SaveConfig(IConstants.USER_SEQ, String.valueOf(user.getUserSeq()));
-//                db.SaveConfig(IConstants.USER_EMAIL, user.getEmail());
-//                db.SaveConfig(IConstants.USER_FULL_NAME, user.getFullName());
-//                Group ug = new Group();
-//                ug.setGroupSeq(groupSeq);
-//                ug.setGroupName(groupName);
-//                ug.setDefault(true);
-//                ug.addToList();
-//                db.SaveConfig(IConstants.USER_GROUP_INFO,
-//                        Group.encode());
                     setResult(RESULT_OK);
-                    // finish();
+
                 }
             } catch (Exception e) {
                 setResult(RESULT_CANCELED);
@@ -287,13 +230,13 @@ public class InviteActivity extends BaseActivity {
                         Toast.LENGTH_LONG).show();
                 finish();
             } else {
-//
+
                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
                 builder.setTitle("Invitation..");
 
                 builder.setMessage(success);
-                // Add the buttons
+
                 builder.setPositiveButton(R.string.ok,
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
@@ -307,7 +250,7 @@ public class InviteActivity extends BaseActivity {
                                 finish();
                             }
                         });
-                // Create the AlertDialog
+
                 AlertDialog dialog = builder.create();
                 dialog.show();
             }

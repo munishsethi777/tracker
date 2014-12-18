@@ -34,7 +34,6 @@ public class GroupActivity extends Activity {
     private static final String TAG = "in.satya.groupactivity";
     private GroupSavingTask groupSavingTask = null;
 
-    // UI references.
 
     private EditText txtGroup;
     private View mProgressView;
@@ -65,10 +64,8 @@ public class GroupActivity extends Activity {
             return;
         }
 
-        // Reset errors.
-        txtGroup.setError(null);
 
-        // Store values at the time of the login attempt.
+        txtGroup.setError(null);
 
         String groupName = txtGroup.getText().toString();
 
@@ -82,12 +79,9 @@ public class GroupActivity extends Activity {
             cancel = true;
         }
         if (cancel) {
-            // There was an error; don't attempt login and focus the first
-            // form field with an error.
             focusView.requestFocus();
         } else {
-            // Show a progress spinner, and kick off a background task to
-            // perform the user login attempt.
+
             showProgress(true);
             Group group = new Group();
             User user = ApiDependency.getOwner(getApplicationContext(), false);
@@ -101,27 +95,9 @@ public class GroupActivity extends Activity {
         }
     }
 
-    private boolean isEmailValid(String email) {
-        //TODO: Replace this with your own logic
-        return email.contains("@");
-    }
-
-    private boolean isPasswordValid(String password) {
-        //TODO: Replace this with your own logic
-        return password.length() > 4;
-    }
-
-    private boolean isMobileValid(String mobile) {
-        //TODO: Replace this with your own logic
-        return mobile.length() >= 11;
-    }
-
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
     public void showProgress(final boolean show) {
-        // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
-        // for very easy animations. If available, use these APIs to fade-in
-        // the progress spinner.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
             int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
 
@@ -143,17 +119,13 @@ public class GroupActivity extends Activity {
                 }
             });
         } else {
-            // The ViewPropertyAnimator APIs are not available, so simply show
-            // and hide the relevant UI components.
+
             mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
             mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
         }
     }
 
-    /**
-     * Represents an asynchronous login/registration task used to authenticate
-     * the user.
-     */
+
     public class GroupSavingTask extends AsyncTask<Void, Void, String> {
 
         Group group;
@@ -177,18 +149,12 @@ public class GroupActivity extends Activity {
                 Log.e(TAG, "Error while registration", e);
                 return errMessage;
             }
-            // Object[] args = {mMobileNo, mEmail, mPassword, mFullName};
+
             String regUrl = IConstants.CREATE_GROUP_URL;
-            regUrl = MessageFormat.format(regUrl, group.getGroupName(), group.getGroupAdmin()); //mMobileNo, mEmail, mPassword, mFullName);
+            regUrl = MessageFormat.format(regUrl, group.getGroupName(), group.getGroupAdmin());
 
             int isSuccess = 0;
             String message = "";
-//            int isExists = 0;
-//            //  String userSeq = "";
-//            Long groupSeq = 0L;
-//            String groupName = "";
-
-
             try {
                 String response = new HttpUtil().hitURL(regUrl);
                 if (response.isEmpty()) {
@@ -198,26 +164,8 @@ public class GroupActivity extends Activity {
                     isSuccess = json.getInt("success");
                     message = json.getString("message");
                     if (isSuccess == 1) {
-                        //  userSeq = String.valueOf(json.get("seq"));
+
                         group.setGroupSeq(json.getLong("seq"));
-//                        isExists = json.getInt("isexists");
-//                        if (isExists == 1) {
-//                            user.setFullName(json.getString("fullname"));
-//                            // mFullName = json.getString("fullname");
-//                            Bundle bundle = new Bundle();
-//
-//                            bundle.putLong("userSeq", user.getUserSeq());
-//                            bundle.putString("fullName", user.getFullName());
-//                            bundle.putBoolean("EXIST", true);
-//                            Intent i = new Intent();
-//
-//                            i.putExtras(bundle);
-//                            setResult(RESULT_OK, i);
-//                            return "";
-//                        } else if (isExists == 0) {
-//                            groupSeq = json.getLong("groupseq");
-//                            groupName = json.getString("groupname");
-//                        }
                     }
                     errMessage = message;
                 }
@@ -232,7 +180,7 @@ public class GroupActivity extends Activity {
                 } else if (isSuccess == 1) {
                     group.save(getApplicationContext());
                     setResult(RESULT_OK);
-                    // finish();
+
                 }
             } catch (Exception e) {
                 setResult(RESULT_CANCELED);
@@ -250,7 +198,7 @@ public class GroupActivity extends Activity {
             if (success == "") {
                 finish();
             } else {
-//
+
                 AlertDialog.Builder builder = new AlertDialog.Builder(mLoginFormView.getContext());
 
                 builder.setTitle("Group..");
@@ -270,7 +218,7 @@ public class GroupActivity extends Activity {
                                 finish();
                             }
                         });
-                // Create the AlertDialog
+
                 AlertDialog dialog = builder.create();
                 dialog.show();
             }

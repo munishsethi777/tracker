@@ -160,14 +160,10 @@ public class RegistrationActivity extends Activity {
         return mobile.length() >= 11;
     }
 
-    /**
-     * Shows the progress UI and hides the login form.
-     */
+
     @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
     public void showProgress(final boolean show) {
-        // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
-        // for very easy animations. If available, use these APIs to fade-in
-        // the progress spinner.
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
             int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
 
@@ -189,30 +185,17 @@ public class RegistrationActivity extends Activity {
                 }
             });
         } else {
-            // The ViewPropertyAnimator APIs are not available, so simply show
-            // and hide the relevant UI components.
+
             mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
             mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
         }
     }
 
-    /**
-     * Represents an asynchronous login/registration task used to authenticate
-     * the user.
-     */
+
     public class UserRegisterTask extends AsyncTask<Void, Void, String> {
 
-        //        private final String mEmail;
-//        private final String mPassword;
-//        private final String mMobileNo;
-//        private String mFullName;
         User user;
-//        UserRegisterTask(String email, String password, String mobileNumber, String fullName) {
-//            mEmail = email;
-//            mPassword = password;
-//            mMobileNo = mobileNumber;
-//            mFullName = fullName;
-//        }
+
 
         UserRegisterTask(User user) {
             this.user = user;
@@ -227,20 +210,20 @@ public class RegistrationActivity extends Activity {
                         Toast.LENGTH_LONG).show();
             }
             try {
-                // Simulate network access.
+
                 Thread.sleep(2000);
             } catch (InterruptedException e) {
                 Log.e(TAG, "Error while registration", e);
                 return errMessage;
             }
-            // Object[] args = {mMobileNo, mEmail, mPassword, mFullName};
+
             String regUrl = IConstants.REGISTRATION_URL;
-            regUrl = MessageFormat.format(regUrl, user.getMobileNo(), user.getEmail(), user.getPassword(), user.getFullName()); //mMobileNo, mEmail, mPassword, mFullName);
+            regUrl = MessageFormat.format(regUrl, user.getMobileNo(), user.getEmail(), user.getPassword(), user.getFullName());
 
             int isSuccess = 0;
             String message = "";
             int isExists = 0;
-            //  String userSeq = "";
+
             Long groupSeq = 0L;
             String groupName = "";
 
@@ -254,12 +237,11 @@ public class RegistrationActivity extends Activity {
                     isSuccess = json.getInt("success");
                     message = json.getString("message");
                     if (isSuccess == 1) {
-                        //  userSeq = String.valueOf(json.get("seq"));
+
                         user.setUserSeq(json.getLong("seq"));
                         isExists = json.getInt("isexists");
                         if (isExists == 1) {
                             user.setFullName(json.getString("fullname"));
-                            // mFullName = json.getString("fullname");
                             Bundle bundle = new Bundle();
 
                             bundle.putLong("userSeq", user.getUserSeq());
@@ -295,20 +277,9 @@ public class RegistrationActivity extends Activity {
                     ug.setDefault(true);
                     ug.save(getApplicationContext());
                     UserGroup.save(getApplicationContext(), ug.getGroupSeq(), user.getUserSeq());
-//                MySQLiteHelper db = new MySQLiteHelper(getApplicationContext());
-//                db.SaveConfig(IConstants.USER_MOBILE, user.getMobileNo());
-//                db.SaveConfig(IConstants.USER_SEQ, String.valueOf(user.getUserSeq()));
-//                db.SaveConfig(IConstants.USER_EMAIL, user.getEmail());
-//                db.SaveConfig(IConstants.USER_FULL_NAME, user.getFullName());
-//                Group ug = new Group();
-//                ug.setGroupSeq(groupSeq);
-//                ug.setGroupName(groupName);
-//                ug.setDefault(true);
-//                ug.addToList();
-//                db.SaveConfig(IConstants.USER_GROUP_INFO,
-//                        Group.encode());
+
                     setResult(RESULT_OK);
-                    // finish();
+
                 }
             } catch (Exception e) {
                 setResult(RESULT_CANCELED);
@@ -326,13 +297,13 @@ public class RegistrationActivity extends Activity {
             if (success == "") {
                 finish();
             } else {
-//
+
                 AlertDialog.Builder builder = new AlertDialog.Builder(mLoginFormView.getContext());
 
                 builder.setTitle("Registration..");
 
                 builder.setMessage(success);
-                // Add the buttons
+
                 builder.setPositiveButton(R.string.ok,
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
@@ -346,7 +317,7 @@ public class RegistrationActivity extends Activity {
                                 finish();
                             }
                         });
-                // Create the AlertDialog
+
                 AlertDialog dialog = builder.create();
                 dialog.show();
             }

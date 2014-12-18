@@ -97,9 +97,7 @@ public class MainActivity extends ActionBarActivity
 
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
-        //mTitle = getTitle();
 
-        // Set up the drawer.
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
@@ -117,7 +115,7 @@ public class MainActivity extends ActionBarActivity
 
     @Override
     public void onNavigationDrawerItemSelected(int position) {
-        // update the main content by replacing fragments
+
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
                 .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))
@@ -127,13 +125,13 @@ public class MainActivity extends ActionBarActivity
     public void onSectionAttached(int number) {
         switch (number) {
             case 1:
-                //     mTitle = getString(R.string.title_section1);
+
                 break;
             case 2:
-                //       mTitle = getString(R.string.title_section2);
+
                 break;
             case 3:
-                //      mTitle = getString(R.string.title_section3);
+
                 break;
         }
     }
@@ -153,29 +151,11 @@ public class MainActivity extends ActionBarActivity
             actionBar.setSelectedNavigationItem(1);
         }
 
-
-        //  int titleId = Resources.getSystem().getIdentifier("action_bar_title", "id", "android");
-
-        // If you're using sherlock, in older versions of android you are not supposed to get a reference to android.R.id.action_bar_title, So here's little hack for that.
-//        if (titleId == 0) {
-//            titleId =in.satyainfopages.geotrack.R.id.abs__action_bar_title;
-//
-//        }
-
-        //  View titleView = findViewById(titleId);
-        // attach listener to this spinnerView for handling spinner selection change
-        //   Spinner spinnerView = (Spinner) getLayoutInflater().inflate(R.layout.spinner_layout, null);
-
-        //source of ViewGroupUtils class is given at the end of this post.
-        //  ViewGroupUtil.replaceView(titleView, spinnerView);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // if (mNavigationDrawerFragment == null || !mNavigationDrawerFragment.isDrawerOpen()) {
-        // Only show items in the action bar relevant to this screen
-        // if the drawer is not showing. Otherwise, let the drawer
-        // decide what to show in the action bar.
+
         getMenuInflater().inflate(R.menu.main, menu);
         MenuItem shareItem = menu.findItem(R.id.action_share);
         mShareActionProvider = (ShareActionProvider)
@@ -200,7 +180,7 @@ public class MainActivity extends ActionBarActivity
         List<Contact> contacts = ApiDependency.getFilteredContacts(this, true);
         if (contacts.size() > 0) {
             if (group != null && group.getGroupSeq() > -1) {
-                Bundle bundle=new Bundle();
+                Bundle bundle = new Bundle();
                 bundle.putLong("GROUP_SEQ", group.getGroupSeq());
                 Intent invIntent = new Intent(this, InviteActivity.class);
                 invIntent.putExtra("BUNDLE", bundle);
@@ -230,22 +210,12 @@ public class MainActivity extends ActionBarActivity
                 syncContacts();
                 return true;
             case R.id.action_settings:
-                // composeMessage();
+
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
-//        // Handle action bar item clicks here. The action bar will
-//        // automatically handle clicks on the Home/Up button, so long
-//        // as you specify a parent activity in AndroidManifest.xml.
-//        int id = item.getItemId();
-//
-//        //noinspection SimplifiableIfStatement
-//        if (id == R.id.action_settings) {
-//            return true;
-//        }
 
-        //return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -256,15 +226,13 @@ public class MainActivity extends ActionBarActivity
                 Intent groupIntent = new Intent(this, GroupActivity.class);
                 startActivityForResult(groupIntent, 3);
             }
-            //   Toast.makeText(this.getApplicationContext(), group.getGroupName(), Toast.LENGTH_SHORT).show();
+
             return true;
         }
         return false;
     }
 
-    /**
-     * A placeholder fragment containing a simple view.
-     */
+
     public static class PlaceholderFragment extends Fragment {
         /**
          * The fragment argument representing the section number for this
@@ -302,27 +270,5 @@ public class MainActivity extends ActionBarActivity
         }
     }
 
-//    public static class ListContentFragment extends Fragment {
-//        private String mText;
-//
-//        @Override
-//        public void onAttach(Activity activity) {
-//            // This is the first callback received; here we can set the text for
-//            // the fragment as defined by the tag specified during the fragment
-//            // transaction
-//            super.onAttach(activity);
-//            mText = getTag();
-//        }
-//
-//        @Override
-//        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-//                                 Bundle savedInstanceState) {
-//            // This is called to define the layout for the fragment;
-//            // we just create a TextView and set its text to be the fragment tag
-//            TextView text = new TextView(getActivity());
-//            text.setText(mText);
-//            return text;
-//        }
-//    }
 
 }

@@ -9,7 +9,6 @@ import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -29,15 +28,10 @@ import in.satyainfopages.geotrack.model.IConstants;
 import in.satyainfopages.geotrackbase.util.HttpUtil;
 
 
-/**
- * A login screen that offers login via email/password.
- */
 public class LoginActivity extends Activity {
 
     private static final String TAG = "in.satya.login";
-    /**
-     * Keep track of the login task to ensure we can cancel it if requested.
-     */
+
     private UserLoginTask mAuthTask = null;
 
 
@@ -53,13 +47,7 @@ public class LoginActivity extends Activity {
         setContentView(R.layout.activity_login);
 
         Bundle bundle = this.getIntent().getBundleExtra("bundle");
-//        if (bundle == null) {
-//            bundle = this.getIntent().getBundleExtra("bundle");
-//        }
-//        if (savedInstanceState != null) {
-//            userSeq = savedInstanceState.getString("userSeq");
-//            fullName = savedInstanceState.getString("fullName");
-//        } else
+
         if (bundle != null) {
             userSeq = bundle.getString("userSeq");
             fullName = bundle.getString("fullName");
@@ -109,7 +97,6 @@ public class LoginActivity extends Activity {
             return;
         }
 
-        // Reset errors.
 
         mPasswordView.setError(null);
 
@@ -127,21 +114,14 @@ public class LoginActivity extends Activity {
 
 
         if (cancel) {
-            // There was an error; don't attempt login and focus the first
-            // form field with an error.
+
             focusView.requestFocus();
         } else {
-            // Show a progress spinner, and kick off a background task to
-            // perform the user login attempt.
+
             showProgress(true);
             mAuthTask = new UserLoginTask(userSeq, password, fullName);
             mAuthTask.execute((Void) null);
         }
-    }
-
-    private boolean isEmailValid(String email) {
-        //TODO: Replace this with your own logic
-        return email.contains("@");
     }
 
     private boolean isPasswordValid(String password) {
@@ -149,14 +129,9 @@ public class LoginActivity extends Activity {
         return password.length() > 4;
     }
 
-    /**
-     * Shows the progress UI and hides the login form.
-     */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
     public void showProgress(final boolean show) {
-        // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
-        // for very easy animations. If available, use these APIs to fade-in
-        // the progress spinner.
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
             int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
 
@@ -178,29 +153,13 @@ public class LoginActivity extends Activity {
                 }
             });
         } else {
-            // The ViewPropertyAnimator APIs are not available, so simply show
-            // and hide the relevant UI components.
+
             mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
             mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
         }
     }
 
 
-    private interface ProfileQuery {
-        String[] PROJECTION = {
-                ContactsContract.CommonDataKinds.Email.ADDRESS,
-                ContactsContract.CommonDataKinds.Email.IS_PRIMARY,
-        };
-
-        int ADDRESS = 0;
-        int IS_PRIMARY = 1;
-    }
-
-
-    /**
-     * Represents an asynchronous login/registration task used to authenticate
-     * the user.
-     */
     public class UserLoginTask extends AsyncTask<Void, Void, String> {
 
         private final String mUserSeq;
@@ -222,7 +181,7 @@ public class LoginActivity extends Activity {
                         Toast.LENGTH_LONG).show();
             }
             try {
-                // Simulate network access.
+
                 Thread.sleep(2000);
             } catch (InterruptedException e) {
                 Log.e(TAG, "Error while Login", e);
@@ -308,7 +267,7 @@ public class LoginActivity extends Activity {
                                 finish();
                             }
                         });
-                // Create the AlertDialog
+
                 AlertDialog dialog = builder.create();
                 dialog.show();
             }
