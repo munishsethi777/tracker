@@ -10,6 +10,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.ShareActionProvider;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,15 +22,14 @@ import android.widget.SpinnerAdapter;
 import java.util.List;
 
 import in.satyainfopages.geotrack.model.ApiDependency;
+import in.satyainfopages.geotrack.model.Contact;
 import in.satyainfopages.geotrack.model.Group;
 import in.satyainfopages.geotrack.model.User;
-import in.satyainfopages.geotrack.sqllite.MySQLiteHelper;
 
 
 public class MainActivity extends ActionBarActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks, ActionBar.OnNavigationListener {
     private static final String TAG = "in.satya.mainactivity";
-    MySQLiteHelper db = null;
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
      */
@@ -41,11 +41,12 @@ public class MainActivity extends ActionBarActivity
     private ShareActionProvider mShareActionProvider;
     private SpinnerAdapter mSpinnerAdapter;
     private List<Group> groups = null;
+    private Group group = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        db = new MySQLiteHelper(getBaseContext());
+
         User user = ApiDependency.getOwner(getBaseContext(), true);
 
         // String mobileNO = db.getConfigVal(IConstants.USER_MOBILE, true);
@@ -104,13 +105,13 @@ public class MainActivity extends ActionBarActivity
                 (DrawerLayout) findViewById(R.id.drawer_layout));
         restoreActionBar();
 
-//        try {
-//            this.startService(new Intent(this, TrackerService.class));
-//
-//        } catch (Exception e) {
-//
-//            Log.e(TAG, "Starting service err..", e);
-//        }
+        try {
+            this.startService(new Intent(this, TrackerService.class));
+
+        } catch (Exception e) {
+
+            Log.e(TAG, "Starting service err..", e);
+        }
 
     }
 
@@ -195,13 +196,39 @@ public class MainActivity extends ActionBarActivity
         return intent;
     }
 
+    private void inviteFriends() {
+        List<Contact> contacts = ApiDependency.getFilteredContacts(this, true);
+        if (contacts.size() > 0) {
+            if (group != null && group.getGroupSeq() > -1) {
+                Bundle bundle=new Bundle();
+                bundle.putLong("GROUP_SEQ", group.getGroupSeq());
+                Intent invIntent = new Intent(this, InviteActivity.class);
+                invIntent.putExtra("BUNDLE", bundle);
+                startActivity(invIntent);
+            } else {
+
+            }
+
+        } else {
+            Intent shareIntent = new Intent(this, ShareActivity.class);
+            startActivity(shareIntent);
+        }
+    }
+
+    private void syncContacts() {
+
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
         switch (item.getItemId()) {
-            //  case R.id.action_example:
-            // openSearch();
-            //       return true;
+            case R.id.action_invites:
+                inviteFriends();
+                return true;
+            case R.id.action_sync_contacts:
+                syncContacts();
+                return true;
             case R.id.action_settings:
                 // composeMessage();
                 return true;
@@ -224,7 +251,7 @@ public class MainActivity extends ActionBarActivity
     @Override
     public boolean onNavigationItemSelected(int i, long l) {
         if (groups != null) {
-            Group group = groups.get(i);
+            group = groups.get(i);
             if (group.getGroupSeq() == -1) {
                 Intent groupIntent = new Intent(this, GroupActivity.class);
                 startActivityForResult(groupIntent, 3);

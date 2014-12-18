@@ -17,8 +17,9 @@ import in.satyainfopages.geotrack.model.Config;
 import in.satyainfopages.geotrack.model.IConstants;
 import in.satyainfopages.geotrack.model.User;
 import in.satyainfopages.geotrack.model.UserLocation;
-import in.satyainfopages.geotrack.sqllite.MySQLiteHelper;
-import in.satyainfopages.geotrack.util.HttpUtil;
+import in.satyainfopages.geotrackbase.sqllite.MySQLiteHelper;
+import in.satyainfopages.geotrackbase.util.DateUtil;
+import in.satyainfopages.geotrackbase.util.HttpUtil;
 
 
 public class LocationPushService extends Handler {
@@ -30,7 +31,7 @@ public class LocationPushService extends Handler {
     public LocationPushService(Looper looper, Context ctxt) {
         super(looper);
         this.ctxt = ctxt;
-        db = new MySQLiteHelper(ctxt);
+        db = new MySQLiteHelper(ctxt, ApiDependency.getDBContext(false));
     }
 
     @Override
@@ -79,7 +80,7 @@ public class LocationPushService extends Handler {
                             jsLoc.put("long", ul.getLng());
                             jsLoc.put("lat", ul.getLat());
                             jsLoc.put("dated",
-                                    MySQLiteHelper.getDateTime(ul.getStampDate()));
+                                    DateUtil.getDateTime(ul.getStampDate()));
                             JSONArray jsArr = new JSONArray();
                             jsArr.put(jsLoc);
 

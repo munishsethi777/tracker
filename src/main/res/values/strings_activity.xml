@@ -17,6 +17,8 @@
 
     <string name="error_internet_connection">Internet connection is not available..</string>
 
+    <string name="invitation_success_message">Invitation sent successfully..</string>
+
     <string name="ok">Ok</string>
     <string name="exit">Exit</string>
 
@@ -27,5 +29,9 @@
     <string name="action_forgot_password">Forgot Password</string>
 
     <string name="title_activity_group">Group</string>
+    <string name="title_activity_invite">Invite friends</string>
+    <string name="title_activity_share">Share with friends</string>
+
+    <string name="button_share">Share</string>
 
 </resources>

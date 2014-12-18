@@ -21,4 +21,14 @@
         android:title="@string/action_settings"
         android:orderInCategory="100"
         yourapp:showAsAction="never" />
+    <item
+        android:id="@+id/action_invites"
+        android:title="@string/action_invites"
+        android:orderInCategory="100"
+        yourapp:showAsAction="never" />
+    <item
+        android:id="@+id/action_sync_contacts"
+        android:title="@string/action_sync_contacts"
+        android:orderInCategory="100"
+        yourapp:showAsAction="never" />
 </menu>

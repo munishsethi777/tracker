@@ -26,7 +26,7 @@ import org.json.JSONObject;
 import java.text.MessageFormat;
 
 import in.satyainfopages.geotrack.model.IConstants;
-import in.satyainfopages.geotrack.util.HttpUtil;
+import in.satyainfopages.geotrackbase.util.HttpUtil;
 
 
 /**

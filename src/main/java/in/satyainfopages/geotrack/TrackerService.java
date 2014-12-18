@@ -19,7 +19,7 @@ import java.util.Date;
 import in.satyainfopages.geotrack.model.ApiDependency;
 import in.satyainfopages.geotrack.model.User;
 import in.satyainfopages.geotrack.model.UserLocation;
-import in.satyainfopages.geotrack.util.GeoLocationMgr;
+import in.satyainfopages.geotrackbase.util.GeoLocationMgr;
 
 
 public class TrackerService extends Service {

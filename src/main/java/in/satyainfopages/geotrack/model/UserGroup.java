@@ -2,14 +2,15 @@ package in.satyainfopages.geotrack.model;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.database.sqlite.SQLiteDatabase;
+import android.database.Cursor;
 
-import in.satyainfopages.geotrack.sqllite.MySQLiteHelper;
+import in.satyainfopages.geotrackbase.sqllite.ICursorToObject;
+import in.satyainfopages.geotrackbase.sqllite.MySQLiteHelper;
 
 /**
  * Created by DalbirSingh on 15-12-2014.
  */
-public class UserGroup {
+public class UserGroup implements ICursorToObject {
 
     public static final String TABLE_NAME = "usergroup";
     public static final String DROP_TABLE = "DROP TABLE IF EXISTS "
@@ -25,25 +26,29 @@ public class UserGroup {
     public static final String[] COLUMNS = {COLUMN_USER_SEQ, COLUMN_GROUP_SEQ};
 
     public static void save(Context context, long groupSeq, long userSeq) {
-        MySQLiteHelper mydb = new MySQLiteHelper(context);
+        MySQLiteHelper mydb = new MySQLiteHelper(context, ApiDependency.getDBContext(false));
 
-        SQLiteDatabase db = null;
-        try {
-            db = mydb.getWritableDatabase();
+//        SQLiteDatabase db = null;
+//        try {
+//            db = mydb.getWritableDatabase();
 
-            ContentValues values = new ContentValues();
-            values.put(UserGroup.COLUMN_GROUP_SEQ, groupSeq);
-            values.put(UserGroup.COLUMN_USER_SEQ, userSeq);
-            db.insert(UserGroup.TABLE_NAME,
-                    null,
-                    values);
+        ContentValues values = new ContentValues();
+        values.put(UserGroup.COLUMN_GROUP_SEQ, groupSeq);
+        values.put(UserGroup.COLUMN_USER_SEQ, userSeq);
+        mydb.insert(UserGroup.TABLE_NAME,
+                null,
+                values);
 
-        } finally {
-            if (db != null) {
-                db.close();
-            }
-        }
+        //  } finally {
+//            if (db != null) {
+//                db.close();
+//            }
+//        }
 
     }
 
+    @Override
+    public Object parseCursor(Cursor cursor) {
+        return null;
+    }
 }

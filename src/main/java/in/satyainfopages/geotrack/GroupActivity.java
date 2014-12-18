@@ -24,7 +24,7 @@ import in.satyainfopages.geotrack.model.ApiDependency;
 import in.satyainfopages.geotrack.model.Group;
 import in.satyainfopages.geotrack.model.IConstants;
 import in.satyainfopages.geotrack.model.User;
-import in.satyainfopages.geotrack.util.HttpUtil;
+import in.satyainfopages.geotrackbase.util.HttpUtil;
 
 /**
  * Created by DalbirSingh on 15-12-2014.

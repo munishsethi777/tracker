@@ -3,17 +3,17 @@ package in.satyainfopages.geotrack.model;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 
 import java.util.List;
 
-import in.satyainfopages.geotrack.sqllite.MySQLiteHelper;
+import in.satyainfopages.geotrackbase.sqllite.ICursorToObject;
+import in.satyainfopages.geotrackbase.sqllite.MySQLiteHelper;
 
 /**
  * Created by DalbirSingh on 13-12-2014.
  */
 
-public class User {
+public class User implements ICursorToObject {
 
 
     public static final String TABLE_NAME = "geouser";
@@ -59,34 +59,37 @@ public class User {
     }
 
     public static User getOwner(Context context) {
-        MySQLiteHelper mydb = new MySQLiteHelper(context);
+        MySQLiteHelper mydb = new MySQLiteHelper(context, ApiDependency.getDBContext(false));
 
-        SQLiteDatabase db = null;
-        Cursor cursor = null;
-        try {
-            db = mydb.getReadableDatabase();
+//        SQLiteDatabase db = null;
+//        Cursor cursor = null;
+//        try {
+//            db = mydb.getReadableDatabase();
 
-            cursor = db.query(User.TABLE_NAME,
-                    User.COLUMNS,
-                    User.COLUMN_ISOWNER + " = ?",
-                    new String[]{String.valueOf(1)},
-                    null,
-                    null,
-                    null,
-                    null);
-
-            if (cursor != null && cursor.getCount() > 0) {
-                cursor.moveToFirst();
-                return cursorToUser(cursor);
-            }
-        } finally {
-            if (cursor != null) {
-                cursor.close();
-            }
-            if (db != null) {
-                db.close();
-            }
+        Object obj = mydb.get(new User(), User.TABLE_NAME,
+                User.COLUMNS,
+                User.COLUMN_ISOWNER + " = ?",
+                new String[]{String.valueOf(1)},
+                null,
+                null,
+                null, null
+        );
+        if (obj != null) {
+            return (User) obj;
         }
+
+//            if (cursor != null && cursor.getCount() > 0) {
+//                cursor.moveToFirst();
+//                return cursorToUser(cursor);
+//            }
+//        } finally {
+//            if (cursor != null) {
+//                cursor.close();
+//            }
+//            if (db != null) {
+//                db.close();
+//            }
+//        }
 
         return null;
     }
@@ -151,33 +154,45 @@ public class User {
     }
 
     public void save(Context context) {
-        MySQLiteHelper mydb = new MySQLiteHelper(context);
+        MySQLiteHelper mydb = new MySQLiteHelper(context, ApiDependency.getDBContext(false));
 
-        SQLiteDatabase db = null;
-        try {
-            db = mydb.getWritableDatabase();
+//        SQLiteDatabase db = null;
+//        try {
+//            db = mydb.getWritableDatabase();
 
-            ContentValues values = new ContentValues();
-            values.put(User.COLUMN_SEQ, this.getUserSeq());
-            values.put(User.COLUMN_MOBILE, this.getMobileNo());
-            values.put(User.COLUMN_EMAIL, this.getEmail());
-            values.put(User.COLUMN_PASSWORD, this.getPassword());
-            values.put(User.COLUMN_NAME, this.getFullName());
-            values.put(User.COLUMN_ISOWNER, this.isOwner());
+        ContentValues values = new ContentValues();
+        values.put(User.COLUMN_SEQ, this.getUserSeq());
+        values.put(User.COLUMN_MOBILE, this.getMobileNo());
+        values.put(User.COLUMN_EMAIL, this.getEmail());
+        values.put(User.COLUMN_PASSWORD, this.getPassword());
+        values.put(User.COLUMN_NAME, this.getFullName());
+        values.put(User.COLUMN_ISOWNER, this.isOwner());
 
-            db.insert(User.TABLE_NAME,
-                    null,
-                    values);
+        mydb.insert(User.TABLE_NAME,
+                null,
+                values);
 
-        } finally {
-            if (db != null) {
-                db.close();
-            }
-        }
+//        } finally {
+//            if (db != null) {
+//                db.close();
+//            }
+//        }
 
     }
 
     public List<Group> getGroups(Context context) {
         return Group.getGroupsByUserSeq(context, this.getUserSeq());
+    }
+
+    @Override
+    public Object parseCursor(Cursor cursor) {
+        User user = new User();
+        user.setUserSeq(cursor.getLong(0));
+        user.setFullName(cursor.getString(1));
+        user.setMobileNo(cursor.getString(2));
+        user.setEmail(cursor.getString(3));
+        user.setPassword(cursor.getString(4));
+        user.setOwner(Boolean.parseBoolean(cursor.getString(5)));
+        return user;
     }
 }
