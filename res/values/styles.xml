@@ -1,0 +1,25 @@
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <style name="AppBaseTheme" parent="@android:style/Theme.Holo.Light.DarkActionBar">
+
+    </style>
+
+    <style name="textApearanceActionBar" parent="@android:style/Widget.Holo.TextView.SpinnerItem">
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="spinnerItemStyle" parent="@android:style/Widget.Holo.TextView.SpinnerItem">
+        <item name="android:textAppearance">@style/textApearanceActionBar</item>
+        <item name="android:gravity">center_vertical</item>
+    </style>
+
+    <style name="AppTheme" parent="AppBaseTheme">
+        <item name="android:spinnerItemStyle">@style/spinnerItemStyle</item>
+        <item name="android:spinnerDropDownItemStyle">@style/spinnerItemStyle</item>
+    </style>
+
+    <style name="ActionBarSpinnerStyle" parent="Widget.AppCompat.Spinner.DropDown.ActionBar">
+
+    </style>
+
+</resources>
