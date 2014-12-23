@@ -84,6 +84,8 @@ public class LoginActivity extends Activity implements ITaskHandler<JSONObject> 
     }
 
     public void forgotPasswordAction() {
+        Toast.makeText(this, "Sorry, Not Supported yet...",
+                Toast.LENGTH_LONG).show();
 
     }
 
