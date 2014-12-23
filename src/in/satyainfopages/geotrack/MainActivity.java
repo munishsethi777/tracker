@@ -98,13 +98,13 @@ public class MainActivity extends ActionBarActivity
                 (DrawerLayout) findViewById(R.id.drawer_layout));
         restoreActionBar();
 
-//        try {
-//            this.startService(new Intent(this, TrackerService.class));
-//
-//        } catch (Exception e) {
-//
-//            Log.e(TAG, "Starting service err..", e);
-//        }
+        try {
+            this.startService(new Intent(this, TrackerService.class));
+
+        } catch (Exception e) {
+
+           Log.e(TAG, "Starting service err..", e);
+        }
 
     }
 
