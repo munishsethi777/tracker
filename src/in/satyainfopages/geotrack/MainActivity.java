@@ -10,6 +10,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.ShareActionProvider;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -103,7 +104,7 @@ public class MainActivity extends ActionBarActivity
 
         } catch (Exception e) {
 
-           Log.e(TAG, "Starting service err..", e);
+            Log.e(TAG, "Starting service err..", e);
         }
 
     }
