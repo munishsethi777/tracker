@@ -29,14 +29,9 @@ import in.satyainfopages.geotrack.model.User;
 public class MainActivity extends ActionBarActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks, ActionBar.OnNavigationListener {
     private static final String TAG = "in.satya.mainactivity";
-    /**
-     * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
-     */
+
     private NavigationDrawerFragment mNavigationDrawerFragment;
-    /**
-     * Used to store the last screen title. For use in {@link #restoreActionBar()}.
-     */
-    // private CharSequence mTitle;
+
     private ShareActionProvider mShareActionProvider;
     private SpinnerAdapter mSpinnerAdapter;
     private List<Group> groups = null;
@@ -48,7 +43,6 @@ public class MainActivity extends ActionBarActivity
 
         User user = ApiDependency.getOwner(getBaseContext(), true);
 
-        // String mobileNO = db.getConfigVal(IConstants.USER_MOBILE, true);
         if (user == null || user.getMobileNo() == null) {
             Intent regIntent = new Intent(this, RegistrationActivity.class);
             startActivityForResult(regIntent, 1);
@@ -82,6 +76,8 @@ public class MainActivity extends ActionBarActivity
         } else if (requestCode == 2) {
             if (resultCode == RESULT_OK) {
 
+            } else {
+                finish();
             }
         } else if (requestCode == 3) {
             if (resultCode == RESULT_OK) {
@@ -184,22 +180,6 @@ public class MainActivity extends ActionBarActivity
             invIntent.putExtra("BUNDLE", bundle);
             startActivity(invIntent);
         }
-//        List<Contact> contacts = ApiDependency.getFilteredContacts(this, true);
-//        if (contacts.size() > 0) {
-//            if (group != null && group.getGroupSeq() > -1) {
-//                Bundle bundle = new Bundle();
-//                bundle.putLong("GROUP_SEQ", group.getGroupSeq());
-//                Intent invIntent = new Intent(this, InviteActivity.class);
-//                invIntent.putExtra("BUNDLE", bundle);
-//                startActivity(invIntent);
-//            } else {
-//
-//            }
-//
-//        } else {
-//            Intent shareIntent = new Intent(this, ShareActivity.class);
-//            startActivity(shareIntent);
-//        }
     }
 
     private void syncContacts() {

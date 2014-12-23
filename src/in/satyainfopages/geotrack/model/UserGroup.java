@@ -27,24 +27,12 @@ public class UserGroup implements ICursorToObject {
 
     public static void save(Context context, long groupSeq, long userSeq) {
         MySQLiteHelper mydb = new MySQLiteHelper(context, ApiDependency.getDBContext(false));
-
-//        SQLiteDatabase db = null;
-//        try {
-//            db = mydb.getWritableDatabase();
-
         ContentValues values = new ContentValues();
         values.put(UserGroup.COLUMN_GROUP_SEQ, groupSeq);
         values.put(UserGroup.COLUMN_USER_SEQ, userSeq);
         mydb.insert(UserGroup.TABLE_NAME,
                 null,
                 values);
-
-        //  } finally {
-//            if (db != null) {
-//                db.close();
-//            }
-//        }
-
     }
 
     @Override

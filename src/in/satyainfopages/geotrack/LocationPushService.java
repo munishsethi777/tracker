@@ -42,29 +42,17 @@ public class LocationPushService extends Handler {
                 user = ApiDependency.getOwner(ctxt, false);
             }
 
-//            String IsServicEnable = db.getConfigVal(
-//                    IConstants.USER_PUSH_SERVICE_KEY, true);
-//            String UserSeq = db.getConfigVal(IConstants.USER_SEQ_KEY, false);
             String LastLocSeq = Config.getConfigVal(
                     ctxt, IConstants.USER_LAST_PUSHED_LOC_SEQ);
-//
-//            String pushGap = db.getConfigVal(IConstants.USER_PUSH_CALL_GAP,
-//                    false);
+
             int gap = 20;
-//            if (pushGap != null) {
-//                try {
-//                    gap = Integer.parseInt(pushGap);
-//                } catch (Exception e) {
-//
-//                }
-//            }
+
             if (gap <= 0) {
                 gap = 20;
             }
             try {
                 Thread.sleep(gap * 1000);
-//                if ((IsServicEnable != null && IsServicEnable.equals("true"))
-//                        && HttpUtil.isInternetOn(ctxt)) {
+
                 if (user != null) {
                     if (HttpUtil.isInternetOn(ctxt)) {
                         long locSeq = Long

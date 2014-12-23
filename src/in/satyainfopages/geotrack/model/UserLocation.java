@@ -23,7 +23,7 @@ public class UserLocation implements ICursorToObject {
     public static final String COLUMN_LAT = "lat";
     public static final String COLUMN_LNG = "lng";
     public static final String COLUMN_STAMP_DATE = "stampdate";
-    // Database creation sql statement
+
     public static final String CREATE_TABLE = "create table " + TABLE_NAME
             + "(" + COLUMN_ID + " integer primary key autoincrement, "
             + COLUMN_USER_SEQ + " integer, " + COLUMN_LAT + " double, "
@@ -44,12 +44,6 @@ public class UserLocation implements ICursorToObject {
     public static List<UserLocation> getAllUserLocs(Context context, long userSeq, int limit, long lastSeq) {
         MySQLiteHelper mydb = new MySQLiteHelper(context, ApiDependency.getDBContext(false));
         List<UserLocation> locs = new ArrayList<UserLocation>();
-
-//        SQLiteDatabase db = null;
-//        Cursor cursor = null;
-//        try {
-//            db = mydb.getReadableDatabase();
-
         String condition = UserLocation.COLUMN_USER_SEQ + " = ?";
         String[] vals = null;
         if (lastSeq > 0) {
@@ -72,23 +66,6 @@ public class UserLocation implements ICursorToObject {
                 null,
                 null,
                 lmt);
-
-
-//            if (cursor.moveToFirst()) {
-//                do {
-//                    locs.add(UserLocation.cursorToUserLoc(cursor));
-//                } while (cursor.moveToNext());
-//            }
-//
-//        } finally {
-//            if (cursor != null) {
-//                cursor.close();
-//            }
-//            if (db != null) {
-//                db.close();
-//            }
-//        }
-
         return locs;
     }
 
@@ -144,10 +121,6 @@ public class UserLocation implements ICursorToObject {
 
     public synchronized void Save(Context context) throws Exception {
         MySQLiteHelper mydb = new MySQLiteHelper(context, ApiDependency.getDBContext(false));
-
-//        SQLiteDatabase db = null;
-//        try {
-//            db = mydb.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(UserLocation.COLUMN_USER_SEQ, this.getUserseq());
         values.put(UserLocation.COLUMN_LAT, this.getLat());
@@ -160,21 +133,12 @@ public class UserLocation implements ICursorToObject {
                 null,
                 values);
 
-//        } finally {
-//            if (db != null) {
-//                db.close();
-//            }
-//        }
     }
 
     public UserLocation getUserLoc(Context context, long id) {
 
         MySQLiteHelper mydb = new MySQLiteHelper(context, ApiDependency.getDBContext(false));
 
-//        SQLiteDatabase db = null;
-//        Cursor cursor = null;
-//        try {
-//            db = mydb.getReadableDatabase();
         mydb.get(this, UserLocation.TABLE_NAME,
                 UserLocation.COLUMNS,
                 UserLocation.COLUMN_ID + " = ?",
@@ -182,22 +146,6 @@ public class UserLocation implements ICursorToObject {
                 null,
                 null,
                 null,null);
-
-
-//            if (cursor != null) {
-//                cursor.moveToFirst();
-//                return UserLocation.cursorToUserLoc(cursor);
-//            }
-//        } finally {
-//            if (cursor != null) {
-//                cursor.close();
-//            }
-//            if (db != null) {
-//                db.close();
-//            }
-//        }
-
-
         return null;
 
     }

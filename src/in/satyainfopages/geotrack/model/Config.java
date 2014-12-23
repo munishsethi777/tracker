@@ -26,34 +26,12 @@ public class Config implements ICursorToObject {
 
     public static String getConfigVal(Context context, String key) {
         MySQLiteHelper mydb = new MySQLiteHelper(context, ApiDependency.getDBContext(false));
-
-//        SQLiteDatabase db = null;
-//        Cursor cursor = null;
-//        try {
-//            db = mydb.getReadableDatabase();
         Object obj = mydb.get(new Config(), Config.TABLE_NAME, CONFIG_COLUMNS, Config.COLUMN_CONFIG_KEY + " = ?",
                 new String[]{String.valueOf(key)}, null, null, null,null);
         if (obj != null) {
             return String.valueOf(obj);
         }
         return null;
-
-//            if (cursor.moveToFirst()) {
-//                do {
-//                    String value = cursor.getString(1);
-//                    return value;
-//                } while (cursor.moveToNext());
-//            }
-//
-//        } finally {
-//            if (cursor != null) {
-//                cursor.close();
-//            }
-//            if (db != null) {
-//                db.close();
-//            }
-//        }
-//        return null;
     }
 
     public static void SaveConfig(Context context, String key, String Val, boolean isUpdate) {
@@ -70,8 +48,6 @@ public class Config implements ICursorToObject {
                 values.put(COLUMN_CONFIG_VAL, Val);
                 mydb.update(Config.TABLE_NAME, values,
                         COLUMN_CONFIG_KEY + " = ?", new String[]{key});
-
-
             }
 
             if (!isExist) {

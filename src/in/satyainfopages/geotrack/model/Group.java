@@ -14,8 +14,6 @@ import in.satyainfopages.geotrackbase.sqllite.MySQLiteHelper;
  * Created by DalbirSingh on 12-12-2014.
  */
 public class Group implements ICursorToObject {
-    //  private static final String GROUP_SEPARATOR = ";";
-    //  private static final String GROUP_FIELD_SEPARATOR = "|";
 
     public static final String TABLE_NAME = "geogroup";
     public static final String DROP_TABLE = "DROP TABLE IF EXISTS "
@@ -46,43 +44,19 @@ public class Group implements ICursorToObject {
         this.groupName = groupName;
     }
 
-//    public static ArrayList<Group> getUserGroups() {
-//        return userGroups;
-//    }
 
     public static List<Group> getGroupsByUserSeq(Context context, long userSeq) {
         List<Group> groups = null;//new ArrayList<Group>();
 
         MySQLiteHelper mydb = new MySQLiteHelper(context, ApiDependency.getDBContext(false));
-//
-//        SQLiteDatabase db = null;
-//        Cursor cursor = null;
-//        try {
-//            db = mydb.getReadableDatabase();
+
         groups = mydb.<Group>getList(new Group(), Group.TABLE_NAME,
                 Group.COLUMNS,
                 Group.COLUMN_ADMIN + " = ?",
                 new String[]{String.valueOf(userSeq)},
                 null,
                 null,
-                null,null);
-
-//            if (cursor != null && cursor.getCount() > 0) {
-//                cursor.moveToFirst();
-//                do {
-//                    groups.add(cursorToGroup(cursor));
-//                } while (cursor.moveToNext());
-//
-//            }
-//        } finally {
-//            if (cursor != null) {
-//                cursor.close();
-//            }
-//            if (db != null) {
-//                db.close();
-//            }
-//        }
-
+                null, null);
         return groups;
     }
 
@@ -97,18 +71,6 @@ public class Group implements ICursorToObject {
         return group;
     }
 
-//    public static String encode() {
-//        String str = "";
-//        for (UserGroup ug : userGroups) {
-//            String tmp = ug.getGroupSeq() + GROUP_FIELD_SEPARATOR + ug.getGroupName() + GROUP_FIELD_SEPARATOR + ug.isDefault();
-//            if (str == "") {
-//                str = tmp;
-//            } else {
-//                str = str + GROUP_SEPARATOR + tmp;
-//            }
-//        }
-//        return str;
-//    }
 
     public long getGroupAdmin() {
         return groupAdmin;
@@ -118,9 +80,6 @@ public class Group implements ICursorToObject {
         this.groupAdmin = groupAdmin;
     }
 
-    //    private static void setUserGroups(ArrayList<UserGroup> userGroups) {
-//        UserGroup.userGroups = userGroups;
-//    }
     public void addToList() {
         if (userGroups == null) {
             userGroups = new ArrayList<Group>();
@@ -156,26 +115,14 @@ public class Group implements ICursorToObject {
 
     public void save(Context context) {
         MySQLiteHelper mydb = new MySQLiteHelper(context, ApiDependency.getDBContext(false));
-
-//        SQLiteDatabase db = null;
-//        try {
-//            db = mydb.getWritableDatabase();
-
-            ContentValues values = new ContentValues();
-            values.put(Group.COLUMN_SEQ, this.getGroupSeq());
-            values.put(Group.COLUMN_NAME, this.getGroupName());
-            values.put(Group.COLUMN_ADMIN, this.getGroupAdmin());
-            values.put(Group.COLUMN_IS_DEFAULT, this.isDefault());
-            mydb.insert(Group.TABLE_NAME,
-                    null,
-                    values);
-
-//        } finally {
-//            if (db != null) {
-//                db.close();
-//            }
-//        }
-
+        ContentValues values = new ContentValues();
+        values.put(Group.COLUMN_SEQ, this.getGroupSeq());
+        values.put(Group.COLUMN_NAME, this.getGroupName());
+        values.put(Group.COLUMN_ADMIN, this.getGroupAdmin());
+        values.put(Group.COLUMN_IS_DEFAULT, this.isDefault());
+        mydb.insert(Group.TABLE_NAME,
+                null,
+                values);
     }
 
     @Override
@@ -195,23 +142,4 @@ public class Group implements ICursorToObject {
         return group;
     }
 
-//    public ArrayList<UserGroup> parseString(String encodedStr) {
-//        if (userGroups == null) {
-//            userGroups = new ArrayList<UserGroup>();
-//        } else {
-//            userGroups.clear();
-//        }
-//        if (encodedStr != null && encodedStr.isEmpty()) {
-//            String[] groups = encodedStr.split(GROUP_SEPARATOR);
-//            for (String group : groups) {
-//                String[] str = group.split(GROUP_FIELD_SEPARATOR);
-//                UserGroup ug = new UserGroup();
-//                ug.setGroupSeq(Long.parseLong(str[0]));
-//                ug.setGroupName(str[1]);
-//                ug.setDefault(Boolean.parseBoolean(str[2]));
-//                ug.addToList();
-//            }
-//        }
-//        return userGroups;
-//    }
 }

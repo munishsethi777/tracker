@@ -9,7 +9,6 @@ import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -36,14 +35,8 @@ public class AllContactsTab extends Fragment implements ITaskHandler<JSONObject>
     private long groupSeq;
     private View v;
     private List<Contact> contacts = null;
-    // private InviteFriendsTask inviteFriendsTask = null;
-    private TaskHandler<Void, Void> taskHandler = null;
 
-    private AdapterView.OnItemClickListener mOnClickListener = new AdapterView.OnItemClickListener() {
-        public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-            onListItemClick((ListView) parent, v, position, id);
-        }
-    };
+    private TaskHandler<Void, Void> taskHandler = null;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -75,15 +68,8 @@ public class AllContactsTab extends Fragment implements ITaskHandler<JSONObject>
         String url = IConstants.GROUP_REQUEST_URL;
         url = MessageFormat.format(url, user.getUserSeq(), numbers, groupSeq);
         taskHandler = new TaskHandler<Void, Void>(url, this, getActivity());
-        taskHandler.showProgress(true,"Sending....");
+        taskHandler.showProgress(true, "Sending....");
         taskHandler.execute((Void) null);
-
-//        inviteFriendsTask = new InviteFriendsTask(numbers, user.getUserSeq(), groupSeq, getActivity(), this);
-//        inviteFriendsTask.showProgress(true);
-//        inviteFriendsTask.execute((Void) null);
-    }
-
-    public void onListItemClick(ListView parent, View v, int position, long id) {
 
     }
 
@@ -92,8 +78,6 @@ public class AllContactsTab extends Fragment implements ITaskHandler<JSONObject>
         for (int i = 0; i < len; i++) {
             try {
                 listView.setItemChecked(i, false);
-//                v = listView.getChildAt(i);
-//                ((CheckedTextView) v).setChecked(false);
             } catch (Exception e) {
                 Log.e(TAG, "Error while unchecked all...", e);
             }
@@ -106,24 +90,10 @@ public class AllContactsTab extends Fragment implements ITaskHandler<JSONObject>
         for (String no : nos) {
             try {
                 listView.setItemChecked(Integer.valueOf(no), true);
-//                v = listView.getChildAt(i);
-//
-//                ((CheckedTextView) v).setChecked(false);
             } catch (Exception e) {
                 Log.e(TAG, "Error while selecting numbers...", e);
             }
-//            int len = listView.getCount();
-//            for (int i = 0; i < len; i++) {
-//                try {
-//                    v = listView.getChildAt(i);
-//
-//                    ((CheckedTextView) v).setChecked(false);
-//                } catch (Exception e) {
-//                    Log.e(TAG, "Error while unchecked all...", e);
-//                }
-//            }
         }
-
     }
 
     @Override
@@ -131,10 +101,10 @@ public class AllContactsTab extends Fragment implements ITaskHandler<JSONObject>
                              Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.contacts_list_view, container, false);
         taskHandler = null;
-        listView = (ListView) v.findViewById(R.id.listContacts);//getListView();
+        listView = (ListView) v.findViewById(R.id.listContacts);
         listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
         listView.setTextFilterEnabled(true);
-        // listView.setEmptyView(progressBar);
+
         Button btnSend = new Button(v.getContext());
         btnSend.setText("Send");
         btnSend.setOnClickListener(new View.OnClickListener() {
@@ -147,10 +117,7 @@ public class AllContactsTab extends Fragment implements ITaskHandler<JSONObject>
         contacts = ApiDependency.getAllContacts(v.getContext(), false);//getFilteredContacts(v.getContext(), false);
         ArrayAdapter<Contact> ada = new ArrayAdapter<Contact>(v.getContext(), R.layout.contacts_list_item, contacts);
         listView.setAdapter(ada);
-
         return v;
-
-
     }
 
 
@@ -175,8 +142,6 @@ public class AllContactsTab extends Fragment implements ITaskHandler<JSONObject>
             builder.setNegativeButton(R.string.exit,
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
-//                            setResult(RESULT_CANCELED);
-//                            finish();
                         }
                     });
 
@@ -186,7 +151,6 @@ public class AllContactsTab extends Fragment implements ITaskHandler<JSONObject>
 
             if (jsonObject != null) {
                 try {
-
                     isSuccess = jsonObject.getInt("success");
                     String message = jsonObject.getString("message");
 
@@ -215,12 +179,10 @@ public class AllContactsTab extends Fragment implements ITaskHandler<JSONObject>
                                         if (name == "") {
                                             name = contact.getName();
                                             indexes = "" + index;
-
                                         } else {
                                             name = name + "," + contact.getName();
                                             indexes = indexes + "," + index;
                                         }
-
                                     }
                                     index = index + 1;
                                 }
@@ -228,9 +190,7 @@ public class AllContactsTab extends Fragment implements ITaskHandler<JSONObject>
                             uncheckedAll();
                             checkNos(indexes);
                             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-
                             builder.setTitle("Invitation..");
-
                             builder.setMessage("Failed to send request to " + name + ". Do you want to resend the request?");
 
                             builder.setPositiveButton(R.string.ok,
@@ -254,7 +214,6 @@ public class AllContactsTab extends Fragment implements ITaskHandler<JSONObject>
                         } else if (already != "") {
 //TODO: already part....
                         }
-
                     }
                 } catch (Exception e) {
                     Toast.makeText(getActivity(), "Error while parsing response...",

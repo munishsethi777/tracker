@@ -9,7 +9,6 @@ import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckedTextView;
@@ -37,14 +36,9 @@ public class GeoContactsTab extends Fragment implements ITaskHandler<JSONObject>
     private long groupSeq;
     private View v;
     private List<Contact> filteredList = null;
-    //  private InviteFriendsTask inviteFriendsTask = null;
+
     private TaskHandler<Void, Void> taskHandler = null;
 
-    private AdapterView.OnItemClickListener mOnClickListener = new AdapterView.OnItemClickListener() {
-        public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-            onListItemClick((ListView) parent, v, position, id);
-        }
-    };
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -72,22 +66,11 @@ public class GeoContactsTab extends Fragment implements ITaskHandler<JSONObject>
         for (String no : nos) {
             try {
                 listView.setItemChecked(Integer.valueOf(no), true);
-//                v = listView.getChildAt(i);
-//
-//                ((CheckedTextView) v).setChecked(false);
+
             } catch (Exception e) {
                 Log.e(TAG, "Error while selecting numbers...", e);
             }
-//            int len = listView.getCount();
-//            for (int i = 0; i < len; i++) {
-//                try {
-//                    v = listView.getChildAt(i);
-//
-//                    ((CheckedTextView) v).setChecked(false);
-//                } catch (Exception e) {
-//                    Log.e(TAG, "Error while unchecked all...", e);
-//                }
-//            }
+
         }
 
     }
@@ -114,16 +97,10 @@ public class GeoContactsTab extends Fragment implements ITaskHandler<JSONObject>
         url = MessageFormat.format(url, user.getUserSeq(), numbers, groupSeq);
         taskHandler = new TaskHandler<Void, Void>(url, this, getActivity());
         taskHandler.execute((Void) null);
-//        inviteFriendsTask = new InviteFriendsTask(numbers, user.getUserSeq(), groupSeq, getActivity(), this);
-//        inviteFriendsTask.showProgress(true);
-//        inviteFriendsTask.execute((Void) null);
-        uncheckedAll();
+
+
     }
 
-
-    public void onListItemClick(ListView parent, View v, int position, long id) {
-
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -131,10 +108,10 @@ public class GeoContactsTab extends Fragment implements ITaskHandler<JSONObject>
         taskHandler = null;
         v = inflater.inflate(R.layout.contacts_list_view, container, false);
         Bundle bundle1 = this.getArguments();
-        listView = (ListView) v.findViewById(R.id.listContacts);//getListView();
+        listView = (ListView) v.findViewById(R.id.listContacts);
         listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
         listView.setTextFilterEnabled(true);
-        // listView.setEmptyView(progressBar);
+
         Button btnSend = new Button(v.getContext());
         btnSend.setText("Send");
         btnSend.setOnClickListener(new View.OnClickListener() {
@@ -174,8 +151,7 @@ public class GeoContactsTab extends Fragment implements ITaskHandler<JSONObject>
             builder.setNegativeButton(R.string.exit,
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
-//                            setResult(RESULT_CANCELED);
-//                            finish();
+
                         }
                     });
 

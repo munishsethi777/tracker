@@ -61,11 +61,6 @@ public class User implements ICursorToObject {
     public static User getOwner(Context context) {
         MySQLiteHelper mydb = new MySQLiteHelper(context, ApiDependency.getDBContext(false));
 
-//        SQLiteDatabase db = null;
-//        Cursor cursor = null;
-//        try {
-//            db = mydb.getReadableDatabase();
-
         Object obj = mydb.get(new User(), User.TABLE_NAME,
                 User.COLUMNS,
                 User.COLUMN_ISOWNER + " = ?",
@@ -77,19 +72,6 @@ public class User implements ICursorToObject {
         if (obj != null) {
             return (User) obj;
         }
-
-//            if (cursor != null && cursor.getCount() > 0) {
-//                cursor.moveToFirst();
-//                return cursorToUser(cursor);
-//            }
-//        } finally {
-//            if (cursor != null) {
-//                cursor.close();
-//            }
-//            if (db != null) {
-//                db.close();
-//            }
-//        }
 
         return null;
     }
@@ -155,11 +137,6 @@ public class User implements ICursorToObject {
 
     public void save(Context context) {
         MySQLiteHelper mydb = new MySQLiteHelper(context, ApiDependency.getDBContext(false));
-
-//        SQLiteDatabase db = null;
-//        try {
-//            db = mydb.getWritableDatabase();
-
         ContentValues values = new ContentValues();
         values.put(User.COLUMN_SEQ, this.getUserSeq());
         values.put(User.COLUMN_MOBILE, this.getMobileNo());
@@ -171,13 +148,6 @@ public class User implements ICursorToObject {
         mydb.insert(User.TABLE_NAME,
                 null,
                 values);
-
-//        } finally {
-//            if (db != null) {
-//                db.close();
-//            }
-//        }
-
     }
 
     public List<Group> getGroups(Context context) {

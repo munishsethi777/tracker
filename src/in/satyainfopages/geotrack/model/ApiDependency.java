@@ -240,47 +240,7 @@ public class ApiDependency {
                 }
             }
 
-//            if (contacts != null && contacts.size() > 0) {
-//                String str = ApiDependency.commaSeparatedNumber(contacts);
-//                String contactsUrl = IConstants.MY_CONTACTS_URL;
-//                contactsUrl = contactsUrl + str;
-//                int isSuccess = 0;
-//                String message = "";
-//                String respNumbers = "";
-//                try {
-//                    String response = new HttpUtil().execute(contactsUrl).get();
-//                    if (response.isEmpty()) {
-//
-//                    } else {
-//                        JSONObject json = new JSONObject(response);
-//                        isSuccess = json.getInt("success");
-//                        message = json.getString("message");
-//                        if (isSuccess == 1) {
-//                            //  userSeq = String.valueOf(json.get("seq"));
-//                            respNumbers = json.getString("numbers");
-//                            String[] nos = respNumbers.split(",");
-//                            for (String tmp : nos) {
-//                                for (Contact contact : contacts) {
-//                                    if (contact.getNumber().equalsIgnoreCase(tmp)) {
-//                                        filteredNumbers.add(contact);
-//                                        break;
-//                                    }
-//                                }
-//                            }
-//
-//                        }
-//
-//
-//                    }
-//
-//                } catch (Exception e) {
-//                    isSuccess = 0;
-//                    Log.e(TAG, "Error while filtering contacts", e);
-//                }
-//
-//            }
-
-            return filteredNumbers;
+           return filteredNumbers;
         }
 
         @Override

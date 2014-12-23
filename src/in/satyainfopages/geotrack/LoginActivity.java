@@ -1,16 +1,10 @@
 package in.satyainfopages.geotrack;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -25,20 +19,17 @@ import org.json.JSONObject;
 import java.text.MessageFormat;
 
 import in.satyainfopages.geotrack.model.IConstants;
-import in.satyainfopages.geotrackbase.util.HttpUtil;
+import in.satyainfopages.geotrackbase.util.ITaskHandler;
+import in.satyainfopages.geotrackbase.util.TaskHandler;
 
 
-public class LoginActivity extends Activity {
+public class LoginActivity extends Activity implements ITaskHandler<JSONObject> {
 
     private static final String TAG = "in.satya.login";
-
-    private UserLoginTask mAuthTask = null;
-
+    private TaskHandler<Void, Void> taskHandler = null;
 
     private EditText mPasswordView;
-    private View mProgressView;
-    private View mLoginFormView;
-    private String userSeq;
+    private long userSeq;
     private String fullName;
 
     @Override
@@ -49,7 +40,7 @@ public class LoginActivity extends Activity {
         Bundle bundle = this.getIntent().getBundleExtra("bundle");
 
         if (bundle != null) {
-            userSeq = bundle.getString("userSeq");
+            userSeq = bundle.getLong("userSeq");
             fullName = bundle.getString("fullName");
         }
 
@@ -84,8 +75,7 @@ public class LoginActivity extends Activity {
         TextView textViewWelcome = (TextView) findViewById(R.id.textViewWelcome);
         String msg = "Welcome Back " + fullName;
         textViewWelcome.setText(msg);
-        mLoginFormView = findViewById(R.id.login_form);
-        mProgressView = findViewById(R.id.login_progress);
+
     }
 
     public void forgotPasswordAction() {
@@ -93,7 +83,7 @@ public class LoginActivity extends Activity {
     }
 
     public void attemptLogin() {
-        if (mAuthTask != null) {
+        if (taskHandler != null) {
             return;
         }
 
@@ -112,15 +102,14 @@ public class LoginActivity extends Activity {
             cancel = true;
         }
 
-
         if (cancel) {
-
             focusView.requestFocus();
         } else {
-
-            showProgress(true);
-            mAuthTask = new UserLoginTask(userSeq, password, fullName);
-            mAuthTask.execute((Void) null);
+            String loginUrl = IConstants.LOGIN_URL;
+            loginUrl = MessageFormat.format(loginUrl, userSeq, password);
+            taskHandler = new TaskHandler<Void, Void>(loginUrl, this, this);
+            taskHandler.showProgress(true, "");
+            taskHandler.execute((Void) null);
         }
     }
 
@@ -129,155 +118,71 @@ public class LoginActivity extends Activity {
         return password.length() > 4;
     }
 
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
-    public void showProgress(final boolean show) {
+    @Override
+    public void TaskComplete(JSONObject jsonObject, Throwable throwable) {
+        String errMessage = "We are unable to update group due to some issue.Please retry after sometime. ";
+        taskHandler.showProgress(false, "");
+        int isSuccess = 0;
+        if (throwable != null || jsonObject == null) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Login..");
+            builder.setMessage(errMessage);
+            builder.setPositiveButton(R.string.ok,
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            return;
+                        }
+                    });
+            builder.setNegativeButton(R.string.exit,
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
-            int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
+                        }
+                    });
 
-            mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-            mLoginFormView.animate().setDuration(shortAnimTime).alpha(
-                    show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-                }
-            });
-
-            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-            mProgressView.animate().setDuration(shortAnimTime).alpha(
-                    show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-                }
-            });
+            AlertDialog dialog = builder.create();
+            dialog.show();
         } else {
+            if (jsonObject != null) {
+                int matches = 0;
+                try {
 
-            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-            mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-        }
-    }
-
-
-    public class UserLoginTask extends AsyncTask<Void, Void, String> {
-
-        private final String mUserSeq;
-        private final String mPassword;
-        private final String mFullName;
-
-        UserLoginTask(String userSeq, String password, String fullName) {
-            mUserSeq = userSeq;
-            mPassword = password;
-            mFullName = fullName;
-        }
-
-        @Override
-        protected String doInBackground(Void... params) {
-            String errMessage = "We are unable to process login due to some issue. Please retry after sometime. ";
-
-            if (!HttpUtil.isInternetOn(getApplicationContext())) {
-                Toast.makeText(getApplicationContext(), R.string.error_internet_connection,
-                        Toast.LENGTH_LONG).show();
-            }
-            try {
-
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                Log.e(TAG, "Error while Login", e);
-                return errMessage;
-            }
-            String loginUrl = IConstants.LOGIN_URL;
-            loginUrl = MessageFormat.format(loginUrl, mUserSeq, mPassword);
-
-            int isSuccess = 0;
-            String message = "";
-            int matches = 0;
-            String mobileNo = "";
-            String email = "";
-            try {
-                String response = new HttpUtil().hitURL(loginUrl);
-                if (response.isEmpty()) {
-
-                } else {
-                    JSONObject json = new JSONObject(response);
-                    isSuccess = json.getInt("success");
-                    message = json.getString("message");
+                    isSuccess = jsonObject.getInt("success");
+                    String message = jsonObject.getString("message");
                     if (isSuccess == 1) {
 
-                        matches = json.getInt("matches");
+                        matches = jsonObject.getInt("matches");
                         if (matches == 1) {
 
-                            mobileNo = json.getString("mobile");
-                            email = json.getString("email");
-
-                        } else if (matches == 0) {
-                            return getString(R.string.error_incorrect_password);
-                        }
-                    }
-                    errMessage = message;
-                }
-
-            } catch (Exception e) {
-                isSuccess = 0;
-                Log.e(TAG, "Error while Login", e);
-            }
-            if (isSuccess == 0) {
-                return errMessage;
-            } else if (isSuccess == 1) {
-//                MySQLiteHelper db = new MySQLiteHelper(getApplicationContext());
+                            String mobileNo = jsonObject.getString("mobile");
+                            String email = jsonObject.getString("email");
+                            //                MySQLiteHelper db = new MySQLiteHelper(getApplicationContext());
 //                db.SaveConfig(IConstants.USER_MOBILE, mobileNo);
 //                db.SaveConfig(IConstants.USER_SEQ, userSeq);
 //                db.SaveConfig(IConstants.USER_EMAIL, email);
 //                db.SaveConfig(IConstants.USER_FULL_NAME, mFullName);
 //                setResult(RESULT_OK);
-                // finish();
-            }
+                            // finish();
 
+                        } else if (matches == 0) {
+                            Toast.makeText(this, "R.string.error_incorrect_password",
+                                    Toast.LENGTH_LONG).show();
 
-            return "";
-        }
+                        }
+                    }
 
-        @Override
-        protected void onPostExecute(final String success) {
-            mAuthTask = null;
-            showProgress(false);
-
-            if (success == "") {
-                finish();
-            } else {
-                //  mPasswordView.setError(getString(R.string.error_incorrect_password));
-                mPasswordView.requestFocus();
-                AlertDialog.Builder builder = new AlertDialog.Builder(mLoginFormView.getContext());
-
-                builder.setTitle("Login..");
-
-                builder.setMessage(success);
-                // Add the buttons
-                builder.setPositiveButton(R.string.ok,
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                return;
-                            }
-                        });
-                builder.setNegativeButton(R.string.exit,
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                setResult(RESULT_CANCELED);
-                                finish();
-                            }
-                        });
-
-                AlertDialog dialog = builder.create();
-                dialog.show();
+//
+                } catch (Exception e) {
+                    Toast.makeText(this, "Error while parsing response...",
+                            Toast.LENGTH_LONG).show();
+                }
             }
         }
+    }
 
-        @Override
-        protected void onCancelled() {
-            mAuthTask = null;
-            showProgress(false);
-        }
+    @Override
+    public void TaskCancel() {
+        taskHandler.showProgress(false, "");
     }
 }
 
