@@ -35,12 +35,12 @@ public class TrackerService extends Service {
                 android.os.Process.THREAD_PRIORITY_BACKGROUND);
         thread.start();
 
-        // Get the HandlerThread's Looper and use it for our Handler
+
         mServiceLooper = thread.getLooper();
         mServiceHandler = new ServiceHandler(mServiceLooper,
                 getApplicationContext());
         Message msg = mServiceHandler.obtainMessage();
-        // msg.arg1 = startId;
+
         mServiceHandler.sendMessage(msg);
 
         HandlerThread thread2 = new HandlerThread("ServiceStartArguments",
@@ -70,16 +70,14 @@ public class TrackerService extends Service {
         Log.i(TAG, "service Destroyed..");
     }
 
-    // Handler that receives messages from the thread
+
     private final class ServiceHandler extends Handler {
 
         Context ctxt = null;
-        //   MySQLiteHelper db = null;
 
         public ServiceHandler(Looper looper, Context ctxt) {
             super(looper);
             this.ctxt = ctxt;
-            //  db = new MySQLiteHelper(ctxt);
         }
 
         @Override
@@ -92,12 +90,9 @@ public class TrackerService extends Service {
                     user = ApiDependency.getOwner(ctxt, false);
                 }
 
-                //  String IsServicEnable = db.getConfigVal(
-                //   IConstants.USER_PUSH_SERVICE_KEY, true);
-
                 try {
                     Thread.sleep(10 * 1000);
-                    //  if (IsServicEnable != null && IsServicEnable.equals("true")) {
+
                     if (mlocManager == null)
                         mlocManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
                     try {
@@ -122,22 +117,8 @@ public class TrackerService extends Service {
                                 mlocListener);
                         Location loc = mlocManager
                                 .getLastKnownLocation(LocationManager.GPS_PROVIDER);
-//                        Geocoder gcd = new Geocoder(getBaseContext(),
-//                                Locale.getDefault());
-
                         if (loc != null) {
-//                            List<Address> addresses;
-//                            String cityName;
-//                            try {
-//                                addresses = gcd.getFromLocation(loc.getLatitude(), loc
-//                                        .getLongitude(), 1);
-//                                if (addresses.size() > 0)
-//                                    System.out.println(addresses.get(0).getLocality());
-//                                cityName = addresses.get(0).getLocality();
-//                                Toast.makeText(getApplicationContext(), cityName, Toast.LENGTH_SHORT).show();
-//                            } catch (IOException e) {
-//                                e.printStackTrace();
-//                            }
+
                             if (user != null) {
                                 UserLocation ul = new UserLocation();
                                 ul.setUserseq(user.getUserSeq());
@@ -156,10 +137,6 @@ public class TrackerService extends Service {
                             Log.w(TAG, "Location not grabbed.");
                         }
                     }
-
-//                    } else {
-//                        Thread.sleep(10 * 1000);
-//                    }
 
                 } catch (Exception e) {
                     Log.e(TAG, "Error while getting location..",

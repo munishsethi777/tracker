@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -87,6 +88,7 @@ public class GroupActivity extends Activity implements ITaskHandler<JSONObject> 
     public void TaskComplete(JSONObject jsonObject, Throwable throwable) {
         String errMessage = "We are unable to update group due to some issue.Please retry after sometime. ";
         taskHandler.showProgress(false, "");
+        taskHandler=null;
         int isSuccess = 0;
         if (throwable != null || jsonObject == null) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -121,6 +123,7 @@ public class GroupActivity extends Activity implements ITaskHandler<JSONObject> 
                 } catch (Exception e) {
                     Toast.makeText(this, "Error while parsing response...",
                             Toast.LENGTH_LONG).show();
+                    Log.e(TAG, "Error while parsing response...", e);
                 }
             }
         }
@@ -129,6 +132,7 @@ public class GroupActivity extends Activity implements ITaskHandler<JSONObject> 
     @Override
     public void TaskCancel() {
         taskHandler.showProgress(false, "");
+        taskHandler=null;
     }
 
 }

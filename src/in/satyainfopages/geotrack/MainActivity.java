@@ -76,7 +76,7 @@ public class MainActivity extends ActionBarActivity
             }
         } else if (requestCode == 2) {
             if (resultCode == RESULT_OK) {
-
+                startUserActivity();
             } else {
                 finish();
             }

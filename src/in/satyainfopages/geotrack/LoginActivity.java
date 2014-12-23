@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -14,11 +15,15 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.text.MessageFormat;
 
+import in.satyainfopages.geotrack.model.Group;
 import in.satyainfopages.geotrack.model.IConstants;
+import in.satyainfopages.geotrack.model.User;
+import in.satyainfopages.geotrack.model.UserGroup;
 import in.satyainfopages.geotrackbase.util.ITaskHandler;
 import in.satyainfopages.geotrackbase.util.TaskHandler;
 
@@ -122,6 +127,7 @@ public class LoginActivity extends Activity implements ITaskHandler<JSONObject> 
     public void TaskComplete(JSONObject jsonObject, Throwable throwable) {
         String errMessage = "We are unable to update group due to some issue.Please retry after sometime. ";
         taskHandler.showProgress(false, "");
+        taskHandler = null;
         int isSuccess = 0;
         if (throwable != null || jsonObject == null) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -153,16 +159,34 @@ public class LoginActivity extends Activity implements ITaskHandler<JSONObject> 
 
                         matches = jsonObject.getInt("matches");
                         if (matches == 1) {
-
+                            long userSeq = jsonObject.getLong("useq");
                             String mobileNo = jsonObject.getString("mobile");
                             String email = jsonObject.getString("email");
-                            //                MySQLiteHelper db = new MySQLiteHelper(getApplicationContext());
-//                db.SaveConfig(IConstants.USER_MOBILE, mobileNo);
-//                db.SaveConfig(IConstants.USER_SEQ, userSeq);
-//                db.SaveConfig(IConstants.USER_EMAIL, email);
-//                db.SaveConfig(IConstants.USER_FULL_NAME, mFullName);
-//                setResult(RESULT_OK);
-                            // finish();
+                            String fullName = jsonObject.getString("fullname");
+                            JSONArray arr = jsonObject.getJSONArray("groups");
+                            User user = new User();
+                            user.setOwner(true);
+                            user.setEmail(email);
+                            user.setMobileNo(mobileNo);
+                            user.setFullName(fullName);
+                            user.setUserSeq(userSeq);
+                            user.save(getApplicationContext());
+                            for (int j = 0; j < arr.length(); j++) {
+                                JSONObject groupData = (JSONObject) arr.getJSONObject(j);
+                                long groupSeq = groupData.getLong("gseq");
+                                String groupName = groupData.getString("gname");
+                                Group ug = new Group();
+                                ug.setGroupSeq(groupSeq);
+                                ug.setGroupName(groupName);
+                                ug.setGroupAdmin(user.getUserSeq());
+                                if (j == 0) {
+                                    ug.setDefault(true);
+                                }
+                                ug.save(getApplicationContext());
+                                UserGroup.save(getApplicationContext(), ug.getGroupSeq(), user.getUserSeq());
+                            }
+                            setResult(RESULT_OK);
+                            finish();
 
                         } else if (matches == 0) {
                             Toast.makeText(this, "R.string.error_incorrect_password",
@@ -171,10 +195,10 @@ public class LoginActivity extends Activity implements ITaskHandler<JSONObject> 
                         }
                     }
 
-//
                 } catch (Exception e) {
                     Toast.makeText(this, "Error while parsing response...",
                             Toast.LENGTH_LONG).show();
+                    Log.e(TAG, "Error while parsing response...", e);
                 }
             }
         }
@@ -183,6 +207,7 @@ public class LoginActivity extends Activity implements ITaskHandler<JSONObject> 
     @Override
     public void TaskCancel() {
         taskHandler.showProgress(false, "");
+        taskHandler = null;
     }
 }
 

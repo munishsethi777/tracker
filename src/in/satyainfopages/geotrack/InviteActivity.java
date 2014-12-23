@@ -16,8 +16,6 @@ public class InviteActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        Bundle bundle = this.getIntent().getBundleExtra("BUNDLE");
-//        groupSeq = bundle.getLong("GROUP_SEQ");
         setupTabs();
 
     }

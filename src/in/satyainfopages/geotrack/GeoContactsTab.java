@@ -134,6 +134,7 @@ public class GeoContactsTab extends Fragment implements ITaskHandler<JSONObject>
     public void TaskComplete(JSONObject jsonObject, Throwable throwable) {
         String errMessage = "We are unable to send invitation due to some issue.Please retry after sometime. ";
         taskHandler.showProgress(false, "");
+        taskHandler=null;
         int isSuccess = 0;
         if (throwable != null || jsonObject == null) {
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -234,6 +235,7 @@ public class GeoContactsTab extends Fragment implements ITaskHandler<JSONObject>
                 } catch (Exception e) {
                     Toast.makeText(getActivity(), "Error while parsing response...",
                             Toast.LENGTH_LONG).show();
+                    Log.e(TAG, "Error while parsing response...", e);
                 }
             }
         }
@@ -243,5 +245,6 @@ public class GeoContactsTab extends Fragment implements ITaskHandler<JSONObject>
     @Override
     public void TaskCancel() {
         taskHandler.showProgress(false, "");
+        taskHandler=null;
     }
 }
