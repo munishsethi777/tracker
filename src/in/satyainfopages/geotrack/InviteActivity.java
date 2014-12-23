@@ -1,30 +1,13 @@
 package in.satyainfopages.geotrack;
 
-import android.app.AlertDialog;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.os.AsyncTask;
+import android.app.Activity;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
-import android.util.Log;
-import android.util.SparseBooleanArray;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
-import android.widget.Toast;
-
-import org.json.JSONObject;
-
-import java.text.MessageFormat;
-import java.util.List;
-
-import in.satyainfopages.geotrack.model.ApiDependency;
-import in.satyainfopages.geotrack.model.Contact;
-import in.satyainfopages.geotrack.model.IConstants;
-import in.satyainfopages.geotrack.model.User;
-import in.satyainfopages.geotrackbase.util.HttpUtil;
 
 
 /**
@@ -32,12 +15,13 @@ import in.satyainfopages.geotrackbase.util.HttpUtil;
  */
 public class InviteActivity extends BaseActivity {
     private static final String TAG = "in.satya.inivtation";
-    ListView listView = null;
+   // ListView listView = null;
     long groupSeq;
-    private List<Contact> contacts = null;
-    private InviteFriendsTask inviteFriendsTask = null;
-    private View mFormView;
-    private View mProgressView;
+  //  private List<Contact> contacts = null;
+   // private InviteFriendsTask inviteFriendsTask = null;
+   // private View mFormView;
+  //  private View mProgressView;
+  //  private ProgressBar progressBar1;
     private AdapterView.OnItemClickListener mOnClickListener = new AdapterView.OnItemClickListener() {
         public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
             onListItemClick((ListView) parent, v, position, id);
@@ -47,71 +31,67 @@ public class InviteActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.contacts_list_view);
-
         Bundle bundle = this.getIntent().getBundleExtra("BUNDLE");
         groupSeq = bundle.getLong("GROUP_SEQ");
-//        mFormView = findViewById(R.id.invitation_form);
-//        mProgressView = findViewById(R.id.invitation_progress);
+//        progressBar1 = (ProgressBar) findViewById(R.id.invitation_progress);
+//        progressBar1.setVisibility(View.GONE);
+        setupTabs();
 
+    }
+
+    private void setupTabs() {
         ActionBar actionBar = getSupportActionBar();
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
         actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setDisplayShowTitleEnabled(true);
 
-//        // Create a progress bar to display while the list loads
-//        ProgressBar progressBar = new ProgressBar(this);
-//        progressBar.setLayoutParams(new AbsListView.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
-//                ViewGroup.LayoutParams.WRAP_CONTENT, Gravity.CENTER));
-//        progressBar.setIndeterminate(true);
-        listView = (ListView) findViewById(R.id.listContacts);//getListView();
-        listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
-        listView.setTextFilterEnabled(true);
-        // listView.setEmptyView(progressBar);
-        Button btnSend = new Button(this);
-        btnSend.setText("Send");
-        btnSend.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                sendInvitation();
-            }
-        });
-        listView.addFooterView(btnSend);
-//        // Must add the progress bar to the root of the layout
-//        ViewGroup root = (ViewGroup) findViewById(android.R.id.content);
-//        root.addView(progressBar);
+        TabListener<AllContactsTab> t1 = new TabListener<AllContactsTab>(this,
+                "All Contacts", AllContactsTab.class);
+        ActionBar.Tab tab1 = actionBar
+                .newTab()
+                .setText("All Contacts")
+                .setTabListener(t1);
 
-        contacts = ApiDependency.getFilteredContacts(this, false);
-        ArrayAdapter<Contact> ada = new ArrayAdapter<Contact>(getApplicationContext(), android.R.layout.simple_list_item_multiple_choice, contacts);
-        listView.setAdapter(ada);
+        actionBar.addTab(tab1);
+        actionBar.selectTab(tab1);
 
-
+        TabListener<GeoContactsTab> t2 = new TabListener<GeoContactsTab>(this,
+                "GeoTrack Members", GeoContactsTab.class);
+        ActionBar.Tab tab2 = actionBar
+                .newTab()
+                .setText("GeoTrack Members")
+                .setTabListener(t2);
+        actionBar.addTab(tab2);
     }
 
-    private void sendInvitation() {
-        if (inviteFriendsTask != null) {
-            return;
-        }
 
-        String numbers = "";
-        int len = listView.getCount();
-        SparseBooleanArray checked = listView.getCheckedItemPositions();
-        for (int i = 0; i < len; i++)
-            if (checked.get(i)) {
-
-                Contact item = contacts.get(i);
-                if (numbers == "") {
-                    numbers = item.getNumber();
-                } else {
-                    numbers = numbers + "," + item.getNumber();
-                }
-
-
-            }
-        Toast.makeText(this, "Sending invitation to - " + numbers, Toast.LENGTH_SHORT).show();
-        User user = ApiDependency.getOwner(this, false);
-        //  showProgress(true);
-        inviteFriendsTask = new InviteFriendsTask(numbers, user.getUserSeq(), groupSeq, this);//email, password, mobile_no, full_name);
-        inviteFriendsTask.execute((Void) null);
-    }
+//    private void sendInvitation() {
+//        if (inviteFriendsTask != null) {
+//            return;
+//        }
+//
+//        String numbers = "";
+//        int len = listView.getCount();
+//        SparseBooleanArray checked = listView.getCheckedItemPositions();
+//        for (int i = 0; i < len; i++)
+//            if (checked.get(i)) {
+//
+//                Contact item = contacts.get(i);
+//                if (numbers == "") {
+//                    numbers = item.getNumber();
+//                } else {
+//                    numbers = numbers + "," + item.getNumber();
+//                }
+//
+//
+//            }
+//        Toast.makeText(this, "Sending invitation to - " + numbers, Toast.LENGTH_SHORT).show();
+//        User user = ApiDependency.getOwner(this, false);
+//        //  showProgress(true);
+//        inviteFriendsTask = new InviteFriendsTask(numbers, user.getUserSeq(), groupSeq, this, progressBar1);//email, password, mobile_no, full_name);
+//        inviteFriendsTask.showProgress(true);
+//        inviteFriendsTask.execute((Void) null);
+//    }
 
     public void onListItemClick(ListView parent, View v, int position, long id) {
 
@@ -148,119 +128,53 @@ public class InviteActivity extends BaseActivity {
 //        }
 //    }
 
-    public class InviteFriendsTask extends AsyncTask<Void, Void, String> {
+    private class TabListener<T extends Fragment> implements
+            ActionBar.TabListener {
+        private final Activity mActivity;
+        private final String mTag;
+        private final Class<T> mClass;
+        private Fragment mFragment;
 
-        String numbers;
-        long userSeq;
-        long groupSeq;
-        Context context;
-
-        InviteFriendsTask(String numbers, long userSeq, long groupSeq, Context context) {
-            this.numbers = numbers;
-            this.userSeq = userSeq;
-            this.groupSeq = groupSeq;
-            this.context = context;
+        /**
+         * Constructor used each time a new tab is created.
+         *
+         * @param activity The host Activity, used to instantiate the fragment
+         * @param tag      The identifier tag for the fragment
+         * @param clz      The fragment's Class, used to instantiate the fragment
+         */
+        public TabListener(Activity activity, String tag, Class<T> clz) {
+            mActivity = activity;
+            mTag = tag;
+            mClass = clz;
         }
 
         @Override
-        protected String doInBackground(Void... params) {
-            String errMessage = "We are unable to send invitation due to some issue.Please retry after sometime. ";
-
-            if (!HttpUtil.isInternetOn(getApplicationContext())) {
-                Toast.makeText(getApplicationContext(), R.string.error_internet_connection,
-                        Toast.LENGTH_LONG).show();
-            }
-            try {
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                Log.e(TAG, "Error while sending invitation", e);
-                return errMessage;
-            }
-
-            String url = IConstants.GROUP_REQUEST_URL;
-            url = MessageFormat.format(url, userSeq, numbers, groupSeq);
-
-            int isSuccess = 0;
-            String message = "";
-            int isExists = 0;
-            //  String userSeq = "";
-            Long groupSeq = 0L;
-            String groupName = "";
-
-
-            try {
-                String response = new HttpUtil().hitURL(url);
-                if (response.isEmpty()) {
-
-                } else {
-                    JSONObject json = new JSONObject(response);
-                    isSuccess = json.getInt("success");
-                    message = json.getString("message");
-                    if (isSuccess == 1) {
-                    }
-                    errMessage = message;
-                }
-
-            } catch (Exception e) {
-                isSuccess = 0;
-                Log.e(TAG, "Error while sending invitation", e);
-            }
-            try {
-                if (isSuccess == 0) {
-                    return errMessage;
-                } else if (isSuccess == 1) {
-                    setResult(RESULT_OK);
-
-                }
-            } catch (Exception e) {
-                setResult(RESULT_CANCELED);
-                Log.e(TAG, "Error while saving user in db..", e);
-            }
-
-            return "";
-        }
-
-        @Override
-        protected void onPostExecute(final String success) {
-            inviteFriendsTask = null;
-            //   showProgress(false);
-
-            if (success == "") {
-                Toast.makeText(context, R.string.invitation_success_message,
-                        Toast.LENGTH_LONG).show();
-                finish();
+        public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
+            // Check if the fragment is already initialized
+            if (mFragment == null) {
+                // If not, instantiate and add it to the activity
+                mFragment = Fragment.instantiate(mActivity, mClass.getName());
+                mFragment.setArguments(getIntent().getBundleExtra("BUNDLE"));
+                ft.add(android.R.id.content, mFragment, mTag);
             } else {
-
-                AlertDialog.Builder builder = new AlertDialog.Builder(context);
-
-                builder.setTitle("Invitation..");
-
-                builder.setMessage(success);
-
-                builder.setPositiveButton(R.string.ok,
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                return;
-                            }
-                        });
-                builder.setNegativeButton(R.string.exit,
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                setResult(RESULT_CANCELED);
-                                finish();
-                            }
-                        });
-
-                AlertDialog dialog = builder.create();
-                dialog.show();
+                // If it exists, simply attach it in order to show it
+                ft.attach(mFragment);
             }
         }
 
         @Override
-        protected void onCancelled() {
-            inviteFriendsTask = null;
-            //   showProgress(false);
+        public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction ft) {
+            if (mFragment != null) {
+                // Detach the fragment, because another one is being attached
+                ft.detach(mFragment);
+            }
         }
+
+        @Override
+        public void onTabReselected(ActionBar.Tab tab, FragmentTransaction ft) {
+            // User selected the already selected tab. Usually do nothing.
+        }
+
     }
 
 

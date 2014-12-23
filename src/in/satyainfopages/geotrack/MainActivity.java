@@ -10,7 +10,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.ShareActionProvider;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,11 +17,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.SpinnerAdapter;
+import android.widget.Toast;
 
 import java.util.List;
 
 import in.satyainfopages.geotrack.model.ApiDependency;
-import in.satyainfopages.geotrack.model.Contact;
 import in.satyainfopages.geotrack.model.Group;
 import in.satyainfopages.geotrack.model.User;
 
@@ -86,9 +85,9 @@ public class MainActivity extends ActionBarActivity
             }
         } else if (requestCode == 3) {
             if (resultCode == RESULT_OK) {
-                // startUserActivity();
-                restoreActionBar();
+
             }
+            restoreActionBar();
         }
     }
 
@@ -103,13 +102,13 @@ public class MainActivity extends ActionBarActivity
                 (DrawerLayout) findViewById(R.id.drawer_layout));
         restoreActionBar();
 
-        try {
-            this.startService(new Intent(this, TrackerService.class));
-
-        } catch (Exception e) {
-
-            Log.e(TAG, "Starting service err..", e);
-        }
+//        try {
+//            this.startService(new Intent(this, TrackerService.class));
+//
+//        } catch (Exception e) {
+//
+//            Log.e(TAG, "Starting service err..", e);
+//        }
 
     }
 
@@ -177,26 +176,37 @@ public class MainActivity extends ActionBarActivity
     }
 
     private void inviteFriends() {
-        List<Contact> contacts = ApiDependency.getFilteredContacts(this, true);
-        if (contacts.size() > 0) {
-            if (group != null && group.getGroupSeq() > -1) {
-                Bundle bundle = new Bundle();
-                bundle.putLong("GROUP_SEQ", group.getGroupSeq());
-                Intent invIntent = new Intent(this, InviteActivity.class);
-                invIntent.putExtra("BUNDLE", bundle);
-                startActivity(invIntent);
-            } else {
-
-            }
-
-        } else {
-            Intent shareIntent = new Intent(this, ShareActivity.class);
-            startActivity(shareIntent);
+        ApiDependency.LoadFilteredProcess(this);
+        if (group != null && group.getGroupSeq() > -1) {
+            Bundle bundle = new Bundle();
+            bundle.putLong("GROUP_SEQ", group.getGroupSeq());
+            Intent invIntent = new Intent(this, InviteActivity.class);
+            invIntent.putExtra("BUNDLE", bundle);
+            startActivity(invIntent);
         }
+//        List<Contact> contacts = ApiDependency.getFilteredContacts(this, true);
+//        if (contacts.size() > 0) {
+//            if (group != null && group.getGroupSeq() > -1) {
+//                Bundle bundle = new Bundle();
+//                bundle.putLong("GROUP_SEQ", group.getGroupSeq());
+//                Intent invIntent = new Intent(this, InviteActivity.class);
+//                invIntent.putExtra("BUNDLE", bundle);
+//                startActivity(invIntent);
+//            } else {
+//
+//            }
+//
+//        } else {
+//            Intent shareIntent = new Intent(this, ShareActivity.class);
+//            startActivity(shareIntent);
+//        }
     }
 
     private void syncContacts() {
-
+        ApiDependency.getAllContacts(this, true);
+        ApiDependency.LoadFilteredProcess(this);
+        Toast.makeText(this, R.string.contact_sync_message,
+                Toast.LENGTH_LONG).show();
     }
 
     @Override

@@ -16,11 +16,12 @@
     <string name="error_invalid_mobile">Mobile number is invalid (e.g. 911234567891).</string>
 
     <string name="error_internet_connection">Internet connection is not available..</string>
-
+    <string name="contact_sync_message">All Contacts are sync successfully.</string>
     <string name="invitation_success_message">Invitation sent successfully..</string>
 
     <string name="ok">Ok</string>
     <string name="exit">Exit</string>
+    <string name="cancel">Cancel</string>
 
     <string name="title_activity_login">Log In</string>
     <string name="action_done">Done</string>

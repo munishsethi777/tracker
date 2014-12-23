@@ -1,15 +1,5 @@
 package in.satyainfopages.geotrack;
 
-import in.satyainfopages.geotrack.model.ApiDependency;
-import in.satyainfopages.geotrack.model.Group;
-import in.satyainfopages.geotrack.model.IConstants;
-import in.satyainfopages.geotrack.model.User;
-import in.satyainfopages.geotrackbase.util.HttpUtil;
-
-import java.text.MessageFormat;
-
-import org.json.JSONObject;
-
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
@@ -26,6 +16,16 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import org.json.JSONObject;
+
+import java.net.URLEncoder;
+import java.text.MessageFormat;
+
+import in.satyainfopages.geotrack.model.ApiDependency;
+import in.satyainfopages.geotrack.model.Group;
+import in.satyainfopages.geotrack.model.IConstants;
+import in.satyainfopages.geotrack.model.User;
+import in.satyainfopages.geotrackbase.util.HttpUtil;
 
 /**
  * Created by DalbirSingh on 15-12-2014.
@@ -151,13 +151,13 @@ public class GroupActivity extends Activity {
                 return errMessage;
             }
 
-            String regUrl = IConstants.CREATE_GROUP_URL;
-            regUrl = MessageFormat.format(regUrl, group.getGroupName(), group.getGroupAdmin());
+            String groupUrl = IConstants.CREATE_GROUP_URL;
+            groupUrl = MessageFormat.format(groupUrl, URLEncoder.encode(group.getGroupName()), group.getGroupAdmin());
 
             int isSuccess = 0;
             String message = "";
             try {
-                String response = new HttpUtil().hitURL(regUrl);
+                String response = new HttpUtil().hitURL(groupUrl);
                 if (response.isEmpty()) {
 
                 } else {

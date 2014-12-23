@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import org.json.JSONObject;
 
+import java.net.URLEncoder;
 import java.text.MessageFormat;
 
 import in.satyainfopages.geotrack.model.Group;
@@ -218,7 +219,7 @@ public class RegistrationActivity extends Activity {
             }
 
             String regUrl = IConstants.REGISTRATION_URL;
-            regUrl = MessageFormat.format(regUrl, user.getMobileNo(), user.getEmail(), user.getPassword(), user.getFullName());
+            regUrl = MessageFormat.format(regUrl, user.getMobileNo(), user.getEmail(), user.getPassword(), URLEncoder.encode(user.getFullName()));
 
             int isSuccess = 0;
             String message = "";
