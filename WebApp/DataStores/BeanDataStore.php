@@ -237,9 +237,9 @@
     public function executeParameterizedQuery($query,$params){
        $db = MainDB::getInstance();
        $conn = $db->getConnection();
-       $sth = $conn->prepare($query);
+       $sth = $conn->prepare($query);       
        foreach($params as $key => $item){
-          $sth->bindParam($key, $item);
+          $sth->bindValue($key, $item);
         }
         $sth->execute();
         $error = $sth->errorInfo();

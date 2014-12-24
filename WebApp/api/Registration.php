@@ -3,7 +3,9 @@
   require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/User.php");
   require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/Group.php");
   require_once($ConstantsArray['dbServerUrl']. "DataStores/UserDataStore.php");
-  require_once($ConstantsArray['dbServerUrl']. "Utils/StringUtil.php"); 
+  require_once($ConstantsArray['dbServerUrl']. "DataStores/GroupDataStore.php");  
+  require_once($ConstantsArray['dbServerUrl']. "Utils/StringUtil.php");
+   require_once($ConstantsArray['dbServerUrl']. "BusinessObjects/GroupUser.php");
 
   $response = new ArrayObject();
   $response["success"] = 1;
@@ -66,13 +68,13 @@
    function createDefaultGroup(User $user){
         $userFullNameArr = explode(" ",$user->getFullName());
         $groupName = $userFullNameArr[0];
-        $groupDS = new BeanDataStore("Group",Group::$tableName);
+        $groupDS = GroupDataStore::getInstance();
         $group = new Group();
         $group->setAdminUserSeq($user->getSeq());
         $group->setCreatedOn(new DateTime());
         $group->setIsEnabled(true);
         $group->setName($groupName."'s Group");
-        $seq = $groupDS->save($group);
+        $seq = $groupDS->createGroup($group);
         $group->setSeq($seq);
         return $group;
    }

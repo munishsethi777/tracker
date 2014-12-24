@@ -2,6 +2,7 @@
    require_once('../IConstants.inc');  
    require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/Location.php");
    require_once($ConstantsArray['dbServerUrl']. "DataStores/BeanDataStore.php");
+   require_once($ConstantsArray['dbServerUrl']. "DataStores/GroupDataStore.php");
    $response = new ArrayObject();
    $response["success"] = 1;
    $response["message"]  = "";
@@ -22,11 +23,13 @@
         }
         $locationDataStore = new BeanDataStore("Location",Location::$tableName);
         $locationDataStore->saveList($locationArray);
+        $response["groupRequests"] = getGroupRequest($useq);
     }   
     }catch(Exception $e){
        $response["success"] = 0;
        $response["message"]  = "Exception saving tracking : - " . $e->getMessage(); 
     }
+
     header('Access-Control-Allow-Origin: *');
     header("Access-Control-Allow-Credentials: true");
     header('Access-Control-Allow-Methods: GET, PUT, POST, DELETE, OPTIONS');
@@ -36,4 +39,24 @@
     echo json_encode($response);
     return;
     
+    
+    
+   function getGroupRequest($userSeq){
+    try{
+       $groupDataStore = GroupDataStore::getInstance();
+       $objlist =  $groupDataStore->getPendingGroupRequests($userSeq);
+       $grpJson = array();
+       foreach($objlist as $obj){
+          $json = array();
+          $json["groupseq"] = $obj["groupSeq"];
+          $json["groupname"] = $obj["groupName"];
+          $json["grouprequester"] = $obj["groupRequester"];
+          array_push($grpJson,$json);
+       }
+       return  $grpJson;
+    }catch(Exception $e){
+        return "";    
+    }
+    
+   } 
 ?>

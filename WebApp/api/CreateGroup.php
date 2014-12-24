@@ -1,7 +1,7 @@
 <?php
     require_once('../IConstants.inc');
     require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/Group.php");
-    require_once($ConstantsArray['dbServerUrl']. "DataStores/BeanDataStore.php");
+    require_once($ConstantsArray['dbServerUrl']. "DataStores/GroupDataStore.php");
     $response = new ArrayObject();
     $response["success"] = 0;
     $response["message"] = "";
@@ -14,8 +14,8 @@
             $group->setAdminUserSeq($userSeq);
             $group->setCreatedOn(new DateTime());
             $group->setIsEnabled(true); 
-            $GDS = new BeanDataStore("Group",Group::$tableName);
-            $id = $GDS->save($group);
+            $GDS = GroupDataStore::getInstance();
+            $id = $GDS->createGroup($group);
             $response["success"] = 1;
             $response["seq"] = $id; 
         }else{          
