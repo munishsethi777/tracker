@@ -22,13 +22,15 @@
         }
         return null;
     } 
-    public function getLocationsByGroup($groupSeq,$dated){
-        $SQL = "select * from (select * from locations order by locations.seq desc)as l " .
-            "inner join groupusers on l.userseq = groupusers.userseq where groupusers.groupseq = " 
-            . $groupSeq .  " and DATE_FORMAT(dated,'%m/%d/%Y') = '".$dated."'  GROUP BY l.userseq";
-        $locationList = self::executeObjectQuery($SQL);
-        if(sizeof($locationList) > 0){
-            return $locationList;
+    public function getLocationsByGroup($groupSeq){
+        $SQL = "select l.*,users.fullname from (select * from locations order by locations.seq desc)as l " .
+            "inner join groupusers on l.userseq = groupusers.userseq " .
+            "inner join users on l.userseq = users.seq " .  
+            " where groupusers.groupseq = " 
+            . $groupSeq .  " GROUP BY l.userseq";
+        $locationArr = self::executeQuery($SQL);
+        if(!empty($locationArr)){
+            return $locationArr;
         }
         return null; 
     }

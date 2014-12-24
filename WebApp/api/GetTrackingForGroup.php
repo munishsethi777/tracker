@@ -10,29 +10,23 @@
               throw new RuntimeException("Group seq is null !") ;
         } 
         $groupSeq = $_GET["groupseq"];
-        if(isset($_GET["dated"])){
-            $datedStr  = $_GET["dated"];
-            $date = new DateTime($datedStr);            
-        }else{
-            $date = new DateTime();
-        }
-        $dated = $date->format("m/d/Y");
         $locationDataStore = LocationDataStore::getInstance(); 
-        $locations = $locationDataStore->getLocationsByGroup($groupSeq,$dated);
+        $locations = $locationDataStore->getLocationsByGroup($groupSeq);
         $mainJson = array();
          if(!empty($locations)){
             foreach($locations as $location){
              $arr = array();
-             $arr["userseq"] = $location->getUserSeq();
-             $arr["dated"] = $location->getDated();
-             $arr["longitude"] = $location->getLongitude();
-             $arr["latitude"] = $location->getLatitude();
+             $arr["userseq"] = $location["userseq"];
+             $arr["username"] = $location["fullname"];
+             $arr["dated"] = $location["dated"];
+             $arr["longitude"] = $location["longitude"];
+             $arr["latitude"] = $location["latitude"];
              array_push($mainJson,$arr);
              }
          }
-         $json = json_encode($mainJson);
+       
          $response["success"] = 1;
-         $response["data"] = $json;   
+         $response["data"] = $mainJson;   
     }catch(Exception $e){
         $response["message"] = $e->getMessage(); 
     }
