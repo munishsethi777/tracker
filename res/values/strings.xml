@@ -11,6 +11,7 @@
     <string name="action_settings">Settings</string>
     <string name="action_invites">Invite Friends</string>
     <string name="action_sync_contacts">Sync Contacts</string>
+    <string name="action_requests">Requests</string>
     <string name="action_search">Search</string>
     <string name="action_share">Share</string>
 

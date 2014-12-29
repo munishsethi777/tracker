@@ -190,6 +190,13 @@ public class MainActivity extends ActionBarActivity
                 Toast.LENGTH_LONG).show();
     }
 
+    private void requestAction() {
+        Intent requestIntent = new Intent(this, RequestHandlerActivity.class);
+        startActivity(requestIntent);
+
+
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
@@ -199,6 +206,9 @@ public class MainActivity extends ActionBarActivity
                 return true;
             case R.id.action_sync_contacts:
                 syncContacts();
+                return true;
+            case R.id.action_requests:
+                requestAction();
                 return true;
             case R.id.action_settings:
 

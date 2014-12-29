@@ -31,4 +31,9 @@
         android:title="@string/action_sync_contacts"
         android:orderInCategory="100"
         yourapp:showAsAction="never" />
+    <item
+        android:id="@+id/action_requests"
+        android:title="@string/action_requests"
+        android:orderInCategory="100"
+        yourapp:showAsAction="never" />
 </menu>

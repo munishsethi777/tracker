@@ -21,6 +21,8 @@ public class SqlLiteDB implements ISqlLiteDB {
         sqLiteDatabase.execSQL(Group.CREATE_TABLE);
         sqLiteDatabase.execSQL(UserGroup.CREATE_TABLE);
         sqLiteDatabase.execSQL(Config.CREATE_TABLE);
+        sqLiteDatabase.execSQL(GroupRequest.CREATE_TABLE);
+
     }
 
     @Override

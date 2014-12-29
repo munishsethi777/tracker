@@ -89,6 +89,20 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
         </activity>
+
+        <activity
+            android:uiOptions="splitActionBarWhenNarrow"
+            android:theme="@style/Theme.AppCompat.Light"
+            android:name=".RequestHandlerActivity"
+            android:label="@string/title_activity_request_handler"
+            android:windowSoftInputMode="adjustResize|stateVisible"
+            android:excludeFromRecents="true"
+            android:parentActivityName=".MainActivity">
+
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
     </application>
 
 </manifest>

@@ -32,7 +32,7 @@
     <string name="title_activity_group">Group</string>
     <string name="title_activity_invite">Invite friends</string>
     <string name="title_activity_share">Share with friends</string>
-
+    <string name="title_activity_request_handler">Group Requests</string>
     <string name="button_share">Share</string>
 
 </resources>

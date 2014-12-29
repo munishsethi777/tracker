@@ -1,6 +1,10 @@
 package in.satyainfopages.geotrack;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -14,6 +18,7 @@ import java.util.List;
 
 import in.satyainfopages.geotrack.model.ApiDependency;
 import in.satyainfopages.geotrack.model.Config;
+import in.satyainfopages.geotrack.model.GroupRequest;
 import in.satyainfopages.geotrack.model.IConstants;
 import in.satyainfopages.geotrack.model.User;
 import in.satyainfopages.geotrack.model.UserLocation;
@@ -90,6 +95,45 @@ public class LocationPushService extends Handler {
                                     Config.SaveConfig(ctxt,
                                             IConstants.USER_LAST_PUSHED_LOC_SEQ,
                                             String.valueOf(ul.getId()), true);
+                                    if (resJson.has("groupRequests")) {
+                                        JSONArray gqArr = resJson.getJSONArray("groupRequests");
+                                        for (int j = 0; j < gqArr.length(); j++) {
+                                            try {
+                                                JSONObject gqData = (JSONObject) gqArr.getJSONObject(j);
+                                                long groupSeq = gqData.getLong("groupseq");
+                                                String groupName = gqData.getString("groupname");
+                                                String reqFrom = gqData.getString("grouprequester");
+
+                                                GroupRequest groupRequest = new GroupRequest();
+                                                groupRequest.setGroupSeq(groupSeq);
+                                                groupRequest.setGroupName(groupName);
+                                                groupRequest.setReqFrom(reqFrom);
+                                                groupRequest.setReqStatus(GroupRequest.PENDING_STATUS);
+                                                groupRequest.save(ctxt);
+
+//
+                                                Intent intent = new Intent(ctxt, RequestHandlerActivity.class);
+                                                PendingIntent pIntent = PendingIntent.getActivity(ctxt, 0, intent, 0);
+                                                Notification notification = null;
+
+                                                notification = new Notification.Builder(ctxt)
+                                                        .setContentTitle("Group Request")
+                                                        .setContentText(groupRequest.toString()).setSmallIcon(R.drawable.ic_launcher)
+                                                        .setContentIntent(pIntent).getNotification();
+
+
+                                                NotificationManager notificationManager = (NotificationManager) ctxt.getSystemService(ctxt.NOTIFICATION_SERVICE);
+                                                // hide the notification after its selected
+                                                notification.flags |= Notification.FLAG_AUTO_CANCEL;
+                                                notification.flags |= Notification.DEFAULT_SOUND;
+                                                notificationManager.notify(RequestHandlerActivity.NOTIFICATION_ID, notification);
+                                            } catch (Exception e) {
+                                                Log.e(TAG, "Error while saving request", e);
+                                            }
+
+                                        }
+
+                                    }
                                 } else {
 
                                     break;
