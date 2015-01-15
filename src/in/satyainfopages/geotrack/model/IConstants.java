@@ -26,4 +26,7 @@ public class IConstants {
     public static final String GROUP_REQUEST_QUERY = "byuserseq={0}&tomobilenumber={1}&groupseq={2}";
     public static final String GROUP_REQUEST_URL = API_URL + "GroupRequest.php?" + GROUP_REQUEST_QUERY;
 
+    public static final String RESPOND_GROUP_REQUEST_QUERY = "userseq={0}&groupseq={1}&response={2}";
+    public static final String RESPOND_GROUP_REQUEST_URL = API_URL + "RespondGroupRequest.php?" + RESPOND_GROUP_REQUEST_QUERY;
+
 }

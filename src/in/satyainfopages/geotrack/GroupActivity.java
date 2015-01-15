@@ -20,6 +20,7 @@ import in.satyainfopages.geotrack.model.ApiDependency;
 import in.satyainfopages.geotrack.model.Group;
 import in.satyainfopages.geotrack.model.IConstants;
 import in.satyainfopages.geotrack.model.User;
+import in.satyainfopages.geotrack.model.UserGroup;
 import in.satyainfopages.geotrackbase.util.ITaskHandler;
 import in.satyainfopages.geotrackbase.util.TaskHandler;
 
@@ -88,7 +89,7 @@ public class GroupActivity extends Activity implements ITaskHandler<JSONObject> 
     public void TaskComplete(JSONObject jsonObject, Throwable throwable) {
         String errMessage = "We are unable to update group due to some issue.Please retry after sometime. ";
         taskHandler.showProgress(false, "");
-        taskHandler=null;
+        taskHandler = null;
         int isSuccess = 0;
         if (throwable != null || jsonObject == null) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -117,6 +118,7 @@ public class GroupActivity extends Activity implements ITaskHandler<JSONObject> 
                     if (isSuccess == 1) {
                         group.setGroupSeq(jsonObject.getLong("seq"));
                         group.save(getApplicationContext());
+                        UserGroup.save(getApplicationContext(), group.getGroupSeq(), group.getGroupAdmin());
                         setResult(RESULT_OK);
                         finish();
                     }
@@ -132,7 +134,7 @@ public class GroupActivity extends Activity implements ITaskHandler<JSONObject> 
     @Override
     public void TaskCancel() {
         taskHandler.showProgress(false, "");
-        taskHandler=null;
+        taskHandler = null;
     }
 
 }
