@@ -1,7 +1,8 @@
 <?php
  require_once("BeanDataStore.php");
  require_once($ConstantsArray['dbServerUrl']. "BusinessObjects/User.php");
-
+ define("UPDATE_DETAIL","update users set fullname = :fullname, password = :password where seq = :userseq");
+ define("UPDATE_FULLNAME","update users set fullname = :fullname where seq = :userseq");
  class UserDataStore extends BeanDataStore{
 
     private static $userDataStore ;
@@ -48,7 +49,18 @@
         } 
         return  $mobiles;
     }
-
-	
+    
+    
+    function updateDetail($userSeq,$fullName,$password){         
+         $params = array();
+         $params[":userseq"] = $userSeq;
+         $params[":fullname"] = $fullName;
+         $query = UPDATE_FULLNAME;
+         if($password != null && $password != ""){
+            $params[":password"] = $password;
+            $query = UPDATE_DETAIL;    
+         }
+         self::executeParameterizedQuery($query,$params);        
+    }
  }
 ?>
