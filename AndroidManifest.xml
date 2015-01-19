@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="in.satyainfopages.geotrack"
-    android:versionCode="1"
-    android:versionName="1.0" >
+    package="in.satyainfopages.geotrack">
 
-    <uses-sdk
-        android:minSdkVersion="16"
-        android:targetSdkVersion="21" />
+    <uses-feature
+        android:glEsVersion="0x00020000"
+        android:required="true" />
 
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.READ_PROFILE" />
@@ -36,7 +34,11 @@
         android:theme="@style/AppTheme">
         <meta-data
             android:name="com.google.android.gms.version"
-           android:value="6587000"/>
+            android:value="6587000" />
+        <meta-data
+            android:name="com.google.android.maps.v2.API_KEY"
+            android:value="AIzaSyBGInVgz1OwBfjVA9wDU5enlhzJ1cPVUak" />
+
         <activity
             android:uiOptions="splitActionBarWhenNarrow"
             android:theme="@style/Theme.AppCompat.Light"
@@ -52,6 +54,9 @@
             </intent-filter>
         </activity>
         <service android:name=".TrackerService"></service>
+        <receiver
+            android:name=".RequestNotificationReceiver"
+            android:exported="false"></receiver>
 
         <activity
             android:name=".RegistrationActivity"

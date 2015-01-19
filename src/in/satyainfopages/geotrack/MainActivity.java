@@ -1,10 +1,11 @@
 package in.satyainfopages.geotrack;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -20,23 +21,42 @@ import android.widget.ArrayAdapter;
 import android.widget.SpinnerAdapter;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 import in.satyainfopages.geotrack.model.ApiDependency;
 import in.satyainfopages.geotrack.model.Group;
+import in.satyainfopages.geotrack.model.IConstants;
 import in.satyainfopages.geotrack.model.User;
+import in.satyainfopages.geotrack.model.UserLocation;
+import in.satyainfopages.geotrackbase.util.DateUtil;
+import in.satyainfopages.geotrackbase.util.ITaskHandler;
+import in.satyainfopages.geotrackbase.util.TaskHandler;
 
 
 public class MainActivity extends ActionBarActivity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks, ActionBar.OnNavigationListener {
+        implements NavigationDrawerFragment.NavigationDrawerCallbacks, ActionBar.OnNavigationListener, OnMapReadyCallback, ITaskHandler<JSONObject> {
     private static final String TAG = "in.satya.mainactivity";
 
     private NavigationDrawerFragment mNavigationDrawerFragment;
-
+    private TaskHandler<Void, Void> taskHandler = null;
     private ShareActionProvider mShareActionProvider;
     private SpinnerAdapter mSpinnerAdapter;
     private List<Group> groups = null;
     private Group group = null;
+    private List<UserLocation> userLocations = null;
+    private GoogleMap googleMap = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,7 +104,7 @@ public class MainActivity extends ActionBarActivity
             if (resultCode == RESULT_OK) {
 
             }
-            restoreActionBar();
+
         }
     }
 
@@ -97,6 +117,13 @@ public class MainActivity extends ActionBarActivity
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
+
+
+        MapFragment mapFragment = (MapFragment) getFragmentManager()
+                .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
+
+
         restoreActionBar();
 
         try {
@@ -111,11 +138,15 @@ public class MainActivity extends ActionBarActivity
 
     @Override
     public void onNavigationDrawerItemSelected(int position) {
+        if (userLocations != null) {
+            UserLocation userLocation = userLocations.get(position);
+            if (googleMap != null) {
+                LatLng latLng = new LatLng(userLocation.getLat(), userLocation.getLng());
+                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 13));
 
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction()
-                .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))
-                .commit();
+            }
+        }
+
     }
 
     public void onSectionAttached(int number) {
@@ -137,14 +168,14 @@ public class MainActivity extends ActionBarActivity
         if (user != null) {
             groups = user.getGroups(getApplicationContext());
             Group tmpGroup = new Group(-1, "Add New Group");
-            groups.add(0, tmpGroup);
+            groups.add(groups.size(), tmpGroup);
             mSpinnerAdapter = new ArrayAdapter<Group>(this, android.R.layout.simple_spinner_dropdown_item, android.R.id.text1, groups);
 
             ActionBar actionBar = getSupportActionBar();
             actionBar.setDisplayShowTitleEnabled(false);
             actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
             actionBar.setListNavigationCallbacks(mSpinnerAdapter, MainActivity.this);
-            actionBar.setSelectedNavigationItem(1);
+            //  actionBar.setSelectedNavigationItem(0);
         }
 
     }
@@ -157,7 +188,8 @@ public class MainActivity extends ActionBarActivity
         mShareActionProvider = (ShareActionProvider)
                 MenuItemCompat.getActionProvider(shareItem);
         mShareActionProvider.setShareIntent(getSharedIntent());
-        restoreActionBar();
+
+        // restoreActionBar();
         // }
         return true;
 
@@ -226,11 +258,130 @@ public class MainActivity extends ActionBarActivity
             if (group.getGroupSeq() == -1) {
                 Intent groupIntent = new Intent(this, GroupActivity.class);
                 startActivityForResult(groupIntent, 3);
+            } else {
+                showGroupData(group);
             }
 
             return true;
         }
         return false;
+    }
+
+    private void showGroupData(Group group) {
+        if (group != null) {
+            String groupUrl = IConstants.GET_TRACKING_GROUP_URL;
+            groupUrl = MessageFormat.format(groupUrl, group.getGroupSeq());
+            taskHandler = new TaskHandler<Void, Void>(groupUrl, this, this);
+            //  taskHandler.showProgress(true, "");
+            taskHandler.execute((Void) null);
+        }
+    }
+
+    private void showGroupMembers(List<UserLocation> userLocations) {
+        if (googleMap != null) {
+            googleMap.clear();
+            if (userLocations != null && userLocations.size() > 0) {
+                LatLng latLng = new LatLng(userLocations.get(0).getLat(), userLocations.get(0).getLng());
+                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 13));
+                for (UserLocation userLocation : userLocations) {
+                    latLng = new LatLng(userLocation.getLat(), userLocation.getLng());
+                    googleMap.addMarker(new MarkerOptions()
+                            .title(userLocation.getUserName())
+                            .snippet("Hi, I am here now .")
+                            .position(latLng));
+                }
+
+            }
+        }
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        this.googleMap = googleMap;
+        showGroupMembers(userLocations);
+//        LatLng sydney = new LatLng(-33.867, 151.206);
+//
+//        //   googleMap.setMyLocationEnabled(true);
+//        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney, 13));
+//
+//        googleMap.addMarker(new MarkerOptions()
+//                .title("Sydney")
+//                .snippet("The most populous city in Australia.")
+//                .position(sydney));
+    }
+
+    @Override
+    public void TaskComplete(JSONObject jsonObject, Throwable throwable) {
+        String errMessage = "We are unable to get group info due to some issue.Please retry after sometime. ";
+        // taskHandler.showProgress(false, "");
+        if (userLocations != null) {
+            userLocations.clear();
+        } else {
+            userLocations = new ArrayList<UserLocation>();
+        }
+
+        taskHandler = null;
+        int isSuccess = 0;
+        if (throwable != null || jsonObject == null) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Group..");
+            builder.setMessage(errMessage);
+            builder.setPositiveButton(R.string.ok,
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            return;
+                        }
+                    });
+            builder.setNegativeButton(R.string.exit,
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+
+                        }
+                    });
+
+            AlertDialog dialog = builder.create();
+            dialog.show();
+        } else {
+            if (jsonObject != null) {
+                try {
+                    isSuccess = jsonObject.getInt("success");
+                    String message = jsonObject.getString("message");
+                    if (isSuccess == 1) {
+                        JSONArray arr = jsonObject.getJSONArray("data");
+                        for (int j = 0; j < arr.length(); j++) {
+                            JSONObject locData = (JSONObject) arr.getJSONObject(j);
+                            long userSeq = locData.getLong("userseq");
+                            String userName = locData.getString("username");
+                            String locDate = locData.getString("dated");
+                            String lng = locData.getString("longitude");
+                            String lat = locData.getString("latitude");
+                            UserLocation userLocation = new UserLocation();
+                            userLocation.setLat(Double.parseDouble(lat));
+                            userLocation.setLng(Double.parseDouble(lng));
+                            userLocation.setStampDate(DateUtil.ConvertStrToDate(locDate));
+                            userLocation.setUserName(userName);
+                            userLocation.setUserseq(userSeq);
+
+                            userLocations.add(userLocation);
+                        }
+                        mNavigationDrawerFragment.updateAdapter(userLocations);
+                        showGroupMembers(userLocations);
+//                        setResult(RESULT_OK);
+//                        finish();
+                    }
+                } catch (Exception e) {
+                    Toast.makeText(this, "Error while parsing response...",
+                            Toast.LENGTH_LONG).show();
+                    Log.e(TAG, "Error while parsing response...", e);
+                }
+            }
+        }
+    }
+
+    @Override
+    public void TaskCancel() {
+        //  taskHandler.showProgress(false, "");
+        taskHandler = null;
     }
 
 

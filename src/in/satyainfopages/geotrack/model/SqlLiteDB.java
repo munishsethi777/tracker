@@ -10,7 +10,7 @@ import in.satyainfopages.geotrackbase.sqllite.ISqlLiteDB;
 public class SqlLiteDB implements ISqlLiteDB {
 
 
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
     private static final String DATABASE_NAME = "geo_tracker";
 
@@ -27,7 +27,9 @@ public class SqlLiteDB implements ISqlLiteDB {
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i2) {
-
+        if (i == 1 && i2 == 2) {
+            sqLiteDatabase.execSQL(GroupRequest.CREATE_TABLE);
+        }
     }
 
     @Override

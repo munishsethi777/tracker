@@ -40,6 +40,8 @@ public class UserLocation implements ICursorToObject {
     private double lat;
     private double lng;
     private Date stampDate;
+    // used for show data on UI.
+    private String userName;
 
     public static List<UserLocation> getAllUserLocs(Context context, long userSeq, int limit, long lastSeq) {
         MySQLiteHelper mydb = new MySQLiteHelper(context, ApiDependency.getDBContext(false));
@@ -69,7 +71,6 @@ public class UserLocation implements ICursorToObject {
         return locs;
     }
 
-
     public static void deleteLocationsBySeq(Context context, long locSeq) {
         MySQLiteHelper mydb = new MySQLiteHelper(context, ApiDependency.getDBContext(false));
         mydb.delete(TABLE_NAME,
@@ -77,6 +78,14 @@ public class UserLocation implements ICursorToObject {
                 new String[]{String.valueOf(locSeq)});
 
 
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public long getId() {
@@ -145,7 +154,7 @@ public class UserLocation implements ICursorToObject {
                 new String[]{String.valueOf(id)},
                 null,
                 null,
-                null,null);
+                null, null);
         return null;
 
     }
@@ -163,5 +172,10 @@ public class UserLocation implements ICursorToObject {
             Log.e("in.satya.userlocation", "Error while parsing date", e);
         }
         return ul;
+    }
+
+    @Override
+    public String toString() {
+        return this.getUserName();
     }
 }

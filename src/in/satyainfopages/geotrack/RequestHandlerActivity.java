@@ -37,17 +37,9 @@ public class RequestHandlerActivity extends BaseActivity implements CustomListAd
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_request_handler);
-        //generate list
 
         List<GroupRequest> groupRequests = GroupRequest.getPendingRequests(getApplicationContext());
-//        ArrayList<String> list = new ArrayList<String>();
-//        list.add("item1");
-//        list.add("item2");
-
-        //instantiate custom adapter
         adapter = new CustomListAdapter<GroupRequest>(groupRequests, this, this);
-
-        //handle listview and assign adapter
         ListView lView = (ListView) findViewById(R.id.listPendingRequest);
         lView.setAdapter(adapter);
     }

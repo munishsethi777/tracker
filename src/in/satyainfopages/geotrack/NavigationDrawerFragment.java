@@ -22,6 +22,10 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import java.util.List;
+
+import in.satyainfopages.geotrack.model.UserLocation;
+
 /**
  * Fragment used for managing interactions for and presentation of a navigation drawer.
  * See the <a href="https://developer.android.com/design/patterns/navigation-drawer.html#Interaction">
@@ -108,6 +112,27 @@ public class NavigationDrawerFragment extends Fragment {
                 }));
         mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
         return mDrawerListView;
+    }
+
+    public void updateAdapter(List<UserLocation> userLocations) {
+        ArrayAdapter<UserLocation> ada = new ArrayAdapter<UserLocation>(
+                getActionBar().getThemedContext(),
+                android.R.layout.simple_list_item_activated_1,
+                android.R.id.text1,
+                userLocations);
+//        ArrayAdapter<String> ada = new ArrayAdapter<String>(
+//                getActionBar().getThemedContext(),
+//                android.R.layout.simple_list_item_activated_1,
+//                android.R.id.text1,
+//                new String[]{
+//                        "test1", "test2", "test3",
+//                        "test4", "test5", "test6",
+//                        "test7", "test8", "test9",
+//                        "test10", "test11", "test12",
+//                        "test13", "test14", "test15"
+//                });
+        mDrawerListView.setAdapter(ada);
+
     }
 
     public boolean isDrawerOpen() {
@@ -232,12 +257,17 @@ public class NavigationDrawerFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        // If the drawer is open, show the global app actions in the action bar. See also
-        // showGlobalContextActionBar, which controls the top-left area of the action bar.
+//        // If the drawer is open, show the global app actions in the action bar. See also
+//        // showGlobalContextActionBar, which controls the top-left area of the action bar.
         if (mDrawerLayout != null && isDrawerOpen()) {
-            inflater.inflate(R.menu.global, menu);
+          //  inflater.inflate(R.menu.global, menu);
             showGlobalContextActionBar();
+        }else{
+            ActionBar actionBar = getActionBar();
+            actionBar.setDisplayShowTitleEnabled(false);
+            actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
         }
+
         super.onCreateOptionsMenu(menu, inflater);
     }
 

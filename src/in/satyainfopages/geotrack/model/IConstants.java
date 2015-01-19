@@ -29,4 +29,8 @@ public class IConstants {
     public static final String RESPOND_GROUP_REQUEST_QUERY = "userseq={0}&groupseq={1}&response={2}";
     public static final String RESPOND_GROUP_REQUEST_URL = API_URL + "RespondGroupRequest.php?" + RESPOND_GROUP_REQUEST_QUERY;
 
+    public static final String GET_TRACKING_GROUP_QUERY = "groupseq={0}";
+    public static final String GET_TRACKING_GROUP_URL = API_URL + "GetTrackingForGroup.php?" + GET_TRACKING_GROUP_QUERY;
+
+
 }
